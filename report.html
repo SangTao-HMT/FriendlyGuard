@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo - FriendlyGuard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary: #28a745;
+            --primary-light: #71dd8a;
+            --secondary: #218838;
+            --success: #20c997;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #adb5bd;
+            --bg-color: #f5f7fb;
+            --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header - CẢI THIỆN Z-INDEX */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1002;
+            height: 64px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo i {
+            font-size: 24px;
+        }
+        
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 14px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+        
+        .icon-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+        
+        .back-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin: 20px 0;
+            padding-top: 64px;
+        }
+        
+        /* Content Area */
+        .content-area {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            min-height: 500px;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Đổi màu tiêu đề thành xanh */
+        .report-header h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #2a6e3f; /* Màu xanh lá đậm */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .report-header p {
+            font-size: 16px;
+            color: var(--gray);
+            line-height: 1.4;
+        }
+        
+        .report-form {
+            margin-bottom: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+        }
+        
+        select, textarea, input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e1e5ee;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        
+        select:focus, textarea:focus, input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .map-container {
+            height: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            border: 2px solid #e1e5ee;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .map-control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: white;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .map-control-btn:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.05);
+        }
+        
+        .location-confirm {
+            background: #e8f5e8;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+            margin-bottom: 12px;
+        }
+        
+        .location-confirm p {
+            margin-bottom: 8px;
+            color: #2d5016;
+            font-size: 14px;
+        }
+        
+        .image-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 12px;
+        }
+        
+        .image-upload:hover {
+            border-color: var(--primary);
+            background: #f8f9fa;
+        }
+        
+        .image-upload i {
+            font-size: 40px;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+        
+        .image-preview {
+            display: none;
+            margin-top: 12px;
+        }
+        
+        .image-preview img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 6px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .remove-image {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 12px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+        
+        .submit-btn, .reset-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, var(--success), #2ecc71);
+            color: white;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            background: linear-gradient(to right, #219653, #27ad60);
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .reset-btn {
+            background: var(--gray);
+            color: white;
+        }
+        
+        .reset-btn:hover {
+            background: var(--gray-light);
+        }
+        
+        /* Success Popup */
+        .success-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1004;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .popup-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--card-shadow);
+            animation: popupShow 0.3s ease-out;
+        }
+        
+        @keyframes popupShow {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .popup-header {
+            margin-bottom: 20px;
+        }
+        
+        .popup-icon {
+            font-size: 48px;
+            color: #2ecc71;
+            margin-bottom: 15px;
+        }
+        
+        .popup-header h2 {
+            color: #2a6e3f;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .popup-body {
+            margin-bottom: 20px;
+        }
+        
+        .popup-body p {
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .popup-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .popup-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .popup-continue-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .popup-continue-btn:hover {
+            background: linear-gradient(to right, #3a56d4, #3730a3);
+        }
+        
+        .popup-close-btn {
+            background: var(--gray);
+            color: white;
+        }
+        
+        .popup-close-btn:hover {
+            background: var(--gray-light);
+        }
+        
+        @media (max-width: 768px) {
+            .report-header h2 {
+                font-size: 22px;
+            }
+            
+            .report-header p {
+                font-size: 14px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .map-container {
+                height: 250px;
+            }
+            
+            .container {
+                padding: 0 12px;
+            }
+            
+            .content-area {
+                padding: 15px;
+            }
+            
+            .logo h1 {
+                display: none;
+            }
+            
+            .logo i {
+                font-size: 22px;
+            }
+            
+            .submit-btn, .reset-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .popup-content {
+                padding: 20px;
+                max-width: 90%;
+            }
+            
+            .popup-header h2 {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .report-header h2 {
+                font-size: 20px;
+                gap: 8px;
+            }
+            
+            .report-header h2 i {
+                font-size: 20px;
+            }
+            
+            .form-section h3 {
+                font-size: 16px;
+            }
+            
+            .form-section h3 i {
+                font-size: 16px;
+            }
+            
+            select, textarea, input {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+            
+            .map-container {
+                height: 200px;
+            }
+            
+            .map-controls {
+                top: 8px;
+                right: 8px;
+            }
+            
+            .map-control-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .image-upload {
+                padding: 15px;
+            }
+            
+            .image-upload i {
+                font-size: 35px;
+            }
+            
+            .popup-header h2 {
+                font-size: 18px;
+            }
+            
+            .popup-icon {
+                font-size: 40px;
+            }
+            
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 13px;
+            }
+            
+            .icon-btn, .back-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 15px;
+            }
+        }
+        
+        @media (min-width: 577px) {
+            .logo h1 {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .report-header h2 {
+                font-size: 18px;
+            }
+            
+            .report-header p {
+                font-size: 13px;
+            }
+            
+            .popup-content {
+                max-width: 95%;
+            }
+            
+            .popup-header h2 {
+                font-size: 17px;
+            }
+            
+            .image-preview img {
+                max-width: 120px;
+                max-height: 120px;
+            }
+            
+            .popup-actions {
+                flex-direction: column;
+            }
+            
+            .popup-btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .content-area {
+                padding: 12px;
+            }
+            
+            .report-header h2 {
+                font-size: 17px;
+            }
+            
+            .map-container {
+                height: 180px;
+            }
+            
+            .image-upload {
+                padding: 12px;
+            }
+            
+            .image-upload i {
+                font-size: 30px;
+            }
+            
+            .popup-content {
+                padding: 15px;
+            }
+            
+            .popup-header h2 {
+                font-size: 16px;
+            }
+            
+            .popup-icon {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h1>FriendlyGuard</h1>
+                </a>
+                <div class="user-info">
+                    <button class="back-btn" id="backBtn" title="Quay lại">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="header-actions">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <button class="icon-btn" id="logoutBtn" title="Đăng xuất">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="content-area">
+                <div class="report-header">
+                    <!-- Đổi màu tiêu đề thành xanh -->
+                    <h2><i class="fas fa-flag" style="color: #2a6e3f;"></i> Báo Cáo Sự Việc</h2>
+                    <p>Báo cáo các vấn đề vi phạm, tệ nạn học đường với đầy đủ thông tin</p>
+                </div>
+
+                <form id="reportForm" class="report-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-info-circle"></i> Thông Tin Sự Việc</h3>
+                        
+                        <div class="form-group">
+                            <label for="violationType">Loại hình vi phạm:</label>
+                            <select id="violationType" required>
+                                <option value="">Chọn loại vi phạm</option>
+                                <option value="Bạo lực học đường">Bạo lực học đường</option>
+                                <option value="Quấy rối, bắt nạt">Quấy rối, bắt nạt</option>
+                                <option value="Xâm hại tình dục">Xâm hại tình dục</option>
+                                <option value="Ma túy học đường">Ma túy học đường</option>
+                                <option value="Trộm cắp tài sản">Trộm cắp tài sản</option>
+                                <option value="Gian lận thi cử">Gian lận thi cử</option>
+                                <option value="Vi phạm nội quy">Vi phạm nội quy</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="incidentDescription">Mô tả chi tiết sự việc:</label>
+                            <textarea id="incidentDescription" placeholder="Mô tả chi tiết những gì đã xảy ra, thời gian, địa điểm, người liên quan..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="additionalInfo">Thông tin bổ sung (nếu có):</label>
+                            <textarea id="additionalInfo" placeholder="Thông tin về nhân chứng, bằng chứng khác..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Vị Trí Xảy Ra Sự Việc</h3>
+                        
+                        <div class="form-group">
+                            <label>Chọn vị trí trên bản đồ:</label>
+                            <div class="map-container" id="map">
+                                <!-- Thêm nút điều khiển map -->
+                                <div class="map-controls">
+                                    <button type="button" class="map-control-btn" id="locateUserBtn" title="Vị trí hiện tại của bạn">
+                                        <i class="fas fa-location-crosshairs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="location-confirm" id="locationConfirm">
+                                <p><i class="fas fa-check-circle"></i> Đã chọn vị trí: <span id="selectedLocation"></span></p>
+                                <p><small><i class="fas fa-info-circle"></i> Nếu không chọn vị trí, hệ thống sẽ tự động sử dụng vị trí hiện tại của bạn</small></p>
+                                <button type="button" class="remove-image" id="changeLocation">Thay đổi vị trí</button>
+                            </div>
+                            <p class="location-help"><i class="fas fa-info-circle"></i> Nhấp vào bản đồ để chọn vị trí chính xác nơi xảy ra sự việc</p>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-camera"></i> Hình Ảnh Bằng Chứng</h3>
+                        
+                        <div class="form-group">
+                            <label>Tải lên hình ảnh bằng chứng (tối đa 5 ảnh):</label>
+                            <div class="image-upload" id="imageUpload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Nhấp để chọn hình ảnh hoặc kéo thả vào đây</p>
+                                <p class="image-help">Hỗ trợ: JPG, PNG - Tự động giảm chất lượng 720p</p>
+                            </div>
+                            <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
+                            <div class="image-preview" id="imagePreview"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="reset-btn">
+                            <i class="fas fa-redo"></i> Làm Mới
+                        </button>
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i> Gửi Báo Cáo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div class="success-popup" id="successPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <div class="popup-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Báo Cáo Đã Được Gửi Thành Công!</h2>
+            </div>
+            <div class="popup-body">
+                <p>Cảm ơn bạn đã báo cáo sự việc. Hệ thống đã ghi nhận thông tin của bạn.</p>
+                <p>Một cuộc trò chuyện với cộng tác viên đã được tạo tự động.</p>
+                <p><strong>Mã báo cáo:</strong> <span id="reportCode"></span></p>
+            </div>
+            <div class="popup-actions">
+                <button class="popup-btn popup-close-btn" id="closePopup">
+                    <i class="fas fa-times"></i> Đóng
+                </button>
+                <button class="popup-btn popup-continue-btn" id="goToChat">
+                    <i class="fas fa-comments"></i> Đến Trò Chuyện
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCq67Pm6oXQqC4hzShZyMW3XXuFdzuYeog",
+            authDomain: "blhd-ce0b8.firebaseapp.com",
+            projectId: "blhd-ce0b8",
+            storageBucket: "blhd-ce0b8.firebasestorage.app",
+            messagingSenderId: "1062247219518",
+            appId: "1:1062247219518:web:23e17dd2dd8698d46bac6f",
+            measurementId: "G-K7JLBH42RN"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let adminUserId = null;
+        let map = null;
+        let selectedLocation = null;
+        let selectedMarker = null;
+        let userLocationMarker = null;
+        let uploadedImages = [];
+        let isSubmitting = false;
+        let currentReportChatId = null;
+
+        // Check authentication
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('userAvatar').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
+                findOrCreateAdminUser();
+                initMap();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Back button
+        document.getElementById('backBtn').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+
+        // Logout button
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        });
+
+        // Find or create admin user
+        function findOrCreateAdminUser() {
+            db.collection('users')
+                .where('email', '==', 'admin@admin.com')
+                .get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        querySnapshot.forEach((doc) => {
+                            adminUserId = doc.id;
+                        });
+                    } else {
+                        const adminUserRef = db.collection('users').doc();
+                        adminUserId = adminUserRef.id;
+                        adminUserRef.set({
+                            displayName: 'Cộng Tác Viên FriendlyGuard',
+                            email: 'admin@admin.com',
+                            role: 'admin',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            isAdmin: true
+                        });
+                    }
+                });
+        }
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([10.8231, 106.6297], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Hiển thị vị trí người dùng khi bản đồ khởi tạo
+            locateUser();
+
+            // Add click event to map
+            map.on('click', function(e) {
+                setSelectedLocation(e.latlng.lat, e.latlng.lng);
+            });
+
+            // Hiển thị thông báo vị trí
+            document.getElementById('locationConfirm').style.display = 'block';
+        }
+
+        // Locate user function
+        function locateUser() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        
+                        // Đặt vị trí hiện tại làm vị trí mặc định nếu chưa chọn
+                        if (!selectedLocation) {
+                            setSelectedLocation(userLocation.lat, userLocation.lng);
+                        }
+                        
+                        // Di chuyển bản đồ đến vị trí người dùng
+                        map.setView([userLocation.lat, userLocation.lng], 15);
+                        
+                        // Xóa marker cũ nếu có
+                        if (userLocationMarker) {
+                            map.removeLayer(userLocationMarker);
+                        }
+                        
+                        // Thêm marker vị trí hiện tại
+                        userLocationMarker = L.marker([userLocation.lat, userLocation.lng], {
+                            icon: L.divIcon({
+                                className: 'user-location-marker',
+                                html: '<div style="background-color: #28a745; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.3);"></div>',
+                                iconSize: [16, 16]
+                            })
+                        })
+                        .addTo(map)
+                        .bindPopup('Vị trí hiện tại của bạn')
+                        .openPopup();
+                    },
+                    function(error) {
+                        console.log('Could not get current location:', error);
+                        // Nếu không lấy được vị trí, sử dụng vị trí mặc định
+                        if (!selectedLocation) {
+                            setSelectedLocation(10.8231, 106.6297);
+                        }
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
+                    }
+                );
+            } else {
+                // Nếu trình duyệt không hỗ trợ geolocation
+                if (!selectedLocation) {
+                    setSelectedLocation(10.8231, 106.6297);
+                }
+            }
+        }
+
+        // Set selected location
+        function setSelectedLocation(lat, lng) {
+            if (selectedMarker) {
+                map.removeLayer(selectedMarker);
+            }
+
+            selectedLocation = {
+                lat: lat,
+                lng: lng
+            };
+
+            selectedMarker = L.marker([selectedLocation.lat, selectedLocation.lng])
+                .addTo(map)
+                .bindPopup('Vị trí đã chọn')
+                .openPopup();
+
+            // Update location confirmation text
+            document.getElementById('selectedLocation').textContent = 
+                `${selectedLocation.lat.toFixed(6)}, ${selectedLocation.lng.toFixed(6)}`;
+        }
+
+        // Locate user button
+        document.getElementById('locateUserBtn').addEventListener('click', function() {
+            locateUser();
+        });
+
+        // Change location handler
+        document.getElementById('changeLocation').addEventListener('click', function() {
+            if (selectedMarker) {
+                map.removeLayer(selectedMarker);
+                selectedMarker = null;
+                selectedLocation = null;
+            }
+        });
+
+        // Image upload handling
+        document.getElementById('imageUpload').addEventListener('click', function() {
+            document.getElementById('imageInput').click();
+        });
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files.length + uploadedImages.length > 5) {
+                alert('Chỉ có thể tải lên tối đa 5 ảnh');
+                return;
+            }
+
+            for (let file of files) {
+                if (file.type.startsWith('image/')) {
+                    compressImage(file, 720, 0.7, function(compressedImage) {
+                        uploadedImages.push({
+                            file: file,
+                            compressed: compressedImage
+                        });
+                        displayImagePreview(compressedImage, file.name);
+                    });
+                }
+            }
+        });
+
+        // Image compression function
+        function compressImage(file, maxWidth, quality, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const compressedImage = canvas.toDataURL('image/jpeg', quality);
+                    callback(compressedImage);
+                }
+            }
+        }
+
+        // Display image preview
+        function displayImagePreview(imageData, fileName) {
+            const preview = document.getElementById('imagePreview');
+            preview.style.display = 'block';
+
+            const imageContainer = document.createElement('div');
+            imageContainer.style.display = 'inline-block';
+            imageContainer.style.marginRight = '8px';
+            imageContainer.style.marginBottom = '8px';
+            imageContainer.style.position = 'relative';
+
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.alt = fileName;
+            img.style.maxWidth = '120px';
+            img.style.maxHeight = '120px';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-image';
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            removeBtn.onclick = function() {
+                const index = uploadedImages.findIndex(img => img.compressed === imageData);
+                if (index > -1) {
+                    uploadedImages.splice(index, 1);
+                }
+                imageContainer.remove();
+                if (uploadedImages.length === 0) {
+                    preview.style.display = 'none';
+                }
+            };
+
+            imageContainer.appendChild(img);
+            imageContainer.appendChild(removeBtn);
+            preview.appendChild(imageContainer);
+        }
+
+        // Form submission - GỬI NGAY LẬP TỨC KHÔNG QUA MODAL AN TOÀN
+        document.getElementById('reportForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (isSubmitting) {
+                alert('Đang xử lý báo cáo, vui lòng đợi...');
+                return;
+            }
+
+            const violationType = document.getElementById('violationType').value;
+            const description = document.getElementById('incidentDescription').value;
+
+            // Kiểm tra dữ liệu bắt buộc
+            if (!violationType || !description.trim()) {
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc');
+                return;
+            }
+
+            // Nếu không chọn vị trí, tự động lấy vị trí hiện tại
+            if (!selectedLocation && userLocationMarker) {
+                const userLoc = userLocationMarker.getLatLng();
+                setSelectedLocation(userLoc.lat, userLoc.lng);
+            } else if (!selectedLocation) {
+                // Nếu không có vị trí người dùng, lấy vị trí mặc định từ bản đồ
+                const mapCenter = map.getCenter();
+                setSelectedLocation(mapCenter.lat, mapCenter.lng);
+            }
+
+            // Vô hiệu hóa nút submit để tránh click nhiều lần
+            isSubmitting = true;
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+
+            try {
+                // Gửi báo cáo ngay lập tức
+                const result = await createReportImmediately({
+                    violationType: violationType,
+                    description: description.trim(),
+                    additionalInfo: document.getElementById('additionalInfo').value.trim(),
+                    location: selectedLocation,
+                    images: uploadedImages.map(img => img.compressed),
+                    timestamp: new Date()
+                });
+
+                // Hiển thị popup thành công
+                showSuccessPopup(result.chatId, result.reportCode);
+                
+            } catch (error) {
+                console.error('Error creating report:', error);
+                alert('Có lỗi xảy ra khi gửi báo cáo. Vui lòng thử lại.');
+                resetSubmitButton();
+            }
+        });
+
+        // Tạo báo cáo ngay lập tức
+        async function createReportImmediately(reportData) {
+            if (!adminUserId) {
+                throw new Error('Chưa tìm thấy cộng tác viên');
+            }
+
+            // Tạo ID cho báo cáo
+            const chatId = 'BC-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+            const reportCode = chatId.substr(3, 8);
+            
+            // Tạo tên chat
+            const chatName = `BC-${reportData.violationType}-${reportCode}`;
+            
+            // Create chat document
+            await db.collection('chats').doc(chatId).set({
+                name: chatName,
+                participants: [currentUser.uid, adminUserId],
+                createdBy: currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMessage: `Báo cáo: ${reportData.violationType}`,
+                lastMessageTime: firebase.firestore.FieldValue.serverTimestamp(),
+                isReport: true,
+                reportData: {
+                    type: reportData.violationType,
+                    description: reportData.description,
+                    additionalInfo: reportData.additionalInfo,
+                    location: reportData.location,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    reporter: currentUser.uid,
+                    status: 'active',
+                    images: reportData.images
+                },
+                participantNames: {
+                    [currentUser.uid]: currentUser.displayName || currentUser.email,
+                    [adminUserId]: 'Cộng Tác Viên FriendlyGuard'
+                },
+                participantInfo: {
+                    [currentUser.uid]: {
+                        displayName: currentUser.displayName || currentUser.email,
+                        email: currentUser.email,
+                        role: 'user'
+                    },
+                    [adminUserId]: {
+                        displayName: 'Cộng Tác Viên FriendlyGuard',
+                        email: 'admin@admin.com',
+                        role: 'admin'
+                    }
+                }
+            });
+
+            // Add initial report message
+            await db.collection('chats').doc(chatId).collection('messages').add({
+                text: `📋 BÁO CÁO SỰ VIỆC\n\nLoại vi phạm: ${reportData.violationType}\nMô tả: ${reportData.description}\nVị trí: ${reportData.location.lat.toFixed(6)}, ${reportData.location.lng.toFixed(6)}\nThời gian: ${new Date().toLocaleString('vi-VN')}\n\nHệ thống đã ghi nhận báo cáo của bạn. Cộng tác viên sẽ liên hệ hỗ trợ.`,
+                senderId: 'system',
+                senderName: 'Hệ thống FriendlyGuard',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                isSystem: true
+            });
+
+            // Add welcome message from admin
+            await db.collection('chats').doc(chatId).collection('messages').add({
+                text: `Xin chào! Tôi là cộng tác viên FriendlyGuard. Tôi đã nhận được báo cáo của bạn về "${reportData.violationType}". Cảm ơn bạn đã dũng cảm báo cáo. Hãy cho tôi biết thêm chi tiết để chúng tôi có thể hỗ trợ bạn tốt nhất.`,
+                senderId: adminUserId,
+                senderName: 'Cộng Tác Viên FriendlyGuard',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            return {
+                chatId: chatId,
+                reportCode: reportCode
+            };
+        }
+
+        // Hiển thị popup thành công
+        function showSuccessPopup(chatId, reportCode) {
+            currentReportChatId = chatId;
+            document.getElementById('reportCode').textContent = reportCode;
+            document.getElementById('successPopup').style.display = 'flex';
+            
+            // Reset form
+            resetForm();
+        }
+
+        // Đóng popup
+        document.getElementById('closePopup').addEventListener('click', function() {
+            document.getElementById('successPopup').style.display = 'none';
+            resetSubmitButton();
+        });
+
+        // Đi đến chat
+        document.getElementById('goToChat').addEventListener('click', function() {
+            if (currentReportChatId) {
+                window.location.href = `chatbox.html?chatId=${currentReportChatId}`;
+            }
+        });
+
+        // Function to reset form
+        function resetForm() {
+            document.getElementById('reportForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('imagePreview').innerHTML = '';
+            uploadedImages = [];
+            selectedLocation = null;
+            if (selectedMarker) {
+                map.removeLayer(selectedMarker);
+                selectedMarker = null;
+            }
+            // Giữ thông báo vị trí hiển thị
+            document.getElementById('locationConfirm').style.display = 'block';
+            document.getElementById('selectedLocation').textContent = 'Chưa chọn vị trí (sẽ dùng vị trí hiện tại)';
+        }
+
+        // Function to reset submit button
+        function resetSubmitButton() {
+            isSubmitting = false;
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Báo Cáo';
+        }
+
+        // Close popup when clicking outside
+        window.addEventListener('click', function(event) {
+            const popup = document.getElementById('successPopup');
+            if (event.target === popup) {
+                popup.style.display = 'none';
+                resetSubmitButton();
+            }
+        });
+    </script>
+</body>
+</html>

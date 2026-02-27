@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đang chuyển hướng - FriendlyGuard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #28a745, #218838);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: gradientShift 3s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+        }
+        
+        .logo i {
+            font-size: 70px;
+            color: #28a745;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .logo h1 {
+            color: #28a745;
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .logo p {
+            color: #6c757d;
+            font-size: 16px;
+        }
+        
+        .detection-box {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+        
+        .spinner-container {
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #e9ecef;
+            border-top-color: #28a745;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .detection-text {
+            color: #212529;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .device-info {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 14px;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+        
+        .device-info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        
+        .device-info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .device-info-item i {
+            width: 20px;
+            color: #28a745;
+        }
+        
+        .device-info-item span {
+            flex: 1;
+        }
+        
+        .device-info-item .badge {
+            background-color: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge.mobile {
+            background-color: #f72585;
+        }
+        
+        .badge.pc {
+            background-color: #71dd8a;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #71dd8a);
+            border-radius: 10px;
+            animation: progress 2s ease-in-out infinite;
+        }
+        
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        
+        .manual-links {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .manual-link {
+            background-color: white;
+            border: 2px solid #28a745;
+            color: #28a745;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .manual-link:hover {
+            background-color: #28a745;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+        
+        .manual-link.mobile {
+            border-color: #f72585;
+            color: #f72585;
+        }
+        
+        .manual-link.mobile:hover {
+            background-color: #f72585;
+            color: white;
+        }
+        
+        .manual-link.pc {
+            border-color: #71dd8a;
+            color: #71dd8a;
+        }
+        
+        .manual-link.pc:hover {
+            background-color: #71dd8a;
+            color: white;
+        }
+        
+        .countdown {
+            font-size: 24px;
+            font-weight: 700;
+            color: #28a745;
+            margin: 15px 0;
+        }
+        
+        .error-message {
+            color: #f72585;
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #ffeaea;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo i {
+                font-size: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 28px;
+            }
+            
+            .manual-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .manual-link {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>FriendlyGuard</h1>
+            <p>Hệ thống báo cáo tệ nạn học đường</p>
+        </div>
+        
+        <div class="detection-box">
+            <div class="spinner-container">
+                <div class="spinner"></div>
+            </div>
+            
+            <div class="detection-text" id="detectionText">
+                Đang phát hiện thiết bị của bạn...
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="countdown" id="countdown">5</div>
+            
+            <div class="device-info" id="deviceInfo">
+                <div class="device-info-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>User Agent:</span>
+                    <span class="badge" id="userAgentBadge">Đang kiểm tra</span>
+                </div>
+                <div class="device-info-item">
+                    <i class="fas fa-desktop"></i>
+                    <span>Platform:</span>
+                    <span class="badge" id="platformBadge">Đang kiểm tra</span>
+                </div>
+                <div class="device-info-item">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>Touch Support:</span>
+                    <span class="badge" id="touchBadge">Đang kiểm tra</span>
+                </div>
+                <div class="device-info-item">
+                    <i class="fas fa-arrows-alt"></i>
+                    <span>Screen Width:</span>
+                    <span class="badge" id="screenBadge">Đang kiểm tra</span>
+                </div>
+                <div class="device-info-item">
+                    <i class="fas fa-microchip"></i>
+                    <span>Kết luận:</span>
+                    <span class="badge" id="conclusionBadge">Đang phân tích</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="manual-links">
+            <a href="index-mobile.html" class="manual-link mobile">
+                <i class="fas fa-mobile-alt"></i> Vào bản Mobile
+            </a>
+            <a href="index-pc.html" class="manual-link pc">
+                <i class="fas fa-desktop"></i> Vào bản PC
+            </a>
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i>
+            Không thể tự động chuyển hướng. Vui lòng chọn thủ công bên dưới.
+        </div>
+    </div>
+
+    <script>
+        // Hàm phát hiện thiết bị một cách chính xác nhất
+        function detectDevice() {
+            // Thu thập tất cả thông tin có thể
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const platform = navigator.platform;
+            const maxTouchPoints = navigator.maxTouchPoints || 0;
+            const hasTouch = 'ontouchstart' in window || maxTouchPoints > 0;
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+            
+            // Danh sách từ khóa mobile
+            const mobileKeywords = [
+                'Android', 'webOS', 'iPhone', 'iPad', 'iPod', 
+                'BlackBerry', 'Windows Phone', 'Opera Mini', 'IEMobile', 
+                'Mobile', 'Tablet', 'Silk'
+            ];
+            
+            // Kiểm tra user agent
+            const isMobileUA = mobileKeywords.some(keyword => 
+                ua.indexOf(keyword) > -1
+            );
+            
+            // Kiểm tra platform
+            const isMobilePlatform = /iPhone|iPad|iPod|Android|BlackBerry|Windows Phone/i.test(platform);
+            
+            // Kiểm tra kích thước màn hình
+            const isSmallScreen = screenWidth <= 1024;
+            
+            // Kiểm tra touch và pointer
+            const hasFinePointer = window.matchMedia('(pointer:fine)').matches;
+            const hasCoarsePointer = window.matchMedia('(pointer:coarse)').matches;
+            
+            // Logic phát hiện nâng cao
+            let isMobile = false;
+            let confidence = 0;
+            let reasons = [];
+            
+            // 1. User Agent (độ tin cậy cao nhất)
+            if (isMobileUA) {
+                isMobile = true;
+                confidence += 50;
+                reasons.push('User Agent mobile');
+            }
+            
+            // 2. Platform
+            if (isMobilePlatform) {
+                isMobile = true;
+                confidence += 30;
+                reasons.push('Platform mobile');
+            }
+            
+            // 3. Desktop platform (phủ định)
+            const desktopPlatforms = ['Win32', 'Win64', 'MacIntel', 'MacPPC', 'Linux x86_64', 'Linux i686'];
+            if (desktopPlatforms.some(p => platform.indexOf(p) > -1)) {
+                confidence += 20;
+                reasons.push('Platform desktop');
+                // Nếu đã có dấu hiệu desktop, giảm khả năng mobile
+                if (confidence > 0) {
+                    isMobile = false;
+                }
+            }
+            
+            // 4. Touch support
+            if (hasTouch && maxTouchPoints > 0) {
+                confidence += 15;
+                reasons.push('Có hỗ trợ touch');
+                // Tablet thường có touch nhưng vẫn là mobile
+                if (screenWidth > 768 && screenWidth <= 1024) {
+                    isMobile = true; // Tablet là mobile
+                    reasons.push('Tablet detected');
+                }
+            }
+            
+            // 5. Screen size
+            if (screenWidth <= 768) {
+                confidence += 20;
+                isMobile = true;
+                reasons.push('Màn hình nhỏ (mobile)');
+            } else if (screenWidth <= 1024) {
+                confidence += 15;
+                isMobile = true;
+                reasons.push('Màn hình vừa (tablet)');
+            } else {
+                confidence += 10;
+                reasons.push('Màn hình lớn (desktop)');
+            }
+            
+            // 6. Pointer type
+            if (hasCoarsePointer) {
+                confidence += 10;
+                isMobile = true;
+                reasons.push('Con trỏ thô (touch)');
+            }
+            if (hasFinePointer) {
+                confidence += 5;
+                reasons.push('Con trỏ chính xác (mouse)');
+            }
+            
+            return {
+                isMobile: isMobile,
+                confidence: Math.min(confidence, 100),
+                reasons: reasons,
+                userAgent: ua,
+                platform: platform,
+                hasTouch: hasTouch,
+                maxTouchPoints: maxTouchPoints,
+                screenWidth: screenWidth,
+                screenHeight: screenHeight
+            };
+        }
+
+        // Cập nhật hiển thị thông tin
+        function updateDeviceInfo(deviceInfo) {
+            // User Agent
+            const userAgentBadge = document.getElementById('userAgentBadge');
+            userAgentBadge.textContent = deviceInfo.userAgent.length > 50 
+                ? deviceInfo.userAgent.substring(0, 50) + '...' 
+                : deviceInfo.userAgent;
+            userAgentBadge.className = 'badge ' + (deviceInfo.isMobile ? 'mobile' : 'pc');
+            
+            // Platform
+            const platformBadge = document.getElementById('platformBadge');
+            platformBadge.textContent = deviceInfo.platform;
+            platformBadge.className = 'badge ' + (deviceInfo.isMobile ? 'mobile' : 'pc');
+            
+            // Touch Support
+            const touchBadge = document.getElementById('touchBadge');
+            touchBadge.textContent = deviceInfo.hasTouch ? 'Có' : 'Không';
+            touchBadge.className = 'badge ' + (deviceInfo.hasTouch ? 'mobile' : 'pc');
+            
+            // Screen Width
+            const screenBadge = document.getElementById('screenBadge');
+            screenBadge.textContent = deviceInfo.screenWidth + 'px';
+            screenBadge.className = 'badge ' + (deviceInfo.screenWidth <= 1024 ? 'mobile' : 'pc');
+            
+            // Conclusion
+            const conclusionBadge = document.getElementById('conclusionBadge');
+            conclusionBadge.textContent = deviceInfo.isMobile ? 'THIẾT BỊ DI ĐỘNG' : 'MÁY TÍNH (PC)';
+            conclusionBadge.className = 'badge ' + (deviceInfo.isMobile ? 'mobile' : 'pc');
+        }
+
+        // Hàm chuyển hướng với kiểm tra
+        function redirectToAppropriateVersion() {
+            const deviceInfo = detectDevice();
+            console.log('Device info:', deviceInfo);
+            
+            updateDeviceInfo(deviceInfo);
+            
+            // Kiểm tra xem đã chuyển hướng chưa
+            const hasRedirected = sessionStorage.getItem('hasRedirected');
+            
+            if (!hasRedirected) {
+                if (deviceInfo.isMobile) {
+                    console.log('Phát hiện mobile, chuyển đến index-mobile.html');
+                    sessionStorage.setItem('hasRedirected', 'true');
+                    window.location.replace('index-mobile.html');
+                } else {
+                    console.log('Phát hiện PC, chuyển đến index-pc.html');
+                    sessionStorage.setItem('hasRedirected', 'true');
+                    window.location.replace('index-pc.html');
+                }
+                return true;
+            }
+            return false;
+        }
+
+        // Hàm chạy vòng lặp phát hiện
+        async function startDetectionLoop() {
+            let attempts = 0;
+            const maxAttempts = 10;
+            let countdown = 5;
+            const countdownElement = document.getElementById('countdown');
+            const detectionText = document.getElementById('detectionText');
+            const errorMessage = document.getElementById('errorMessage');
+            const progressFill = document.getElementById('progressFill');
+            
+            // Cập nhật countdown mỗi giây
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown >= 0) {
+                    countdownElement.textContent = countdown;
+                }
+            }, 1000);
+            
+            while (attempts < maxAttempts) {
+                attempts++;
+                console.log(`Lần thử ${attempts}/${maxAttempts}`);
+                
+                detectionText.innerHTML = `Đang phát hiện thiết bị... (Lần ${attempts}/${maxAttempts})`;
+                
+                // Cập nhật progress bar
+                progressFill.style.width = (attempts / maxAttempts * 100) + '%';
+                
+                // Thử chuyển hướng
+                const redirected = redirectToAppropriateVersion();
+                
+                if (redirected) {
+                    clearInterval(countdownInterval);
+                    return;
+                }
+                
+                // Đợi 500ms trước khi thử lại
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            // Nếu không chuyển hướng được sau maxAttempts lần
+            clearInterval(countdownInterval);
+            detectionText.innerHTML = '⚠️ Không thể tự động chuyển hướng';
+            errorMessage.classList.add('show');
+            countdownElement.textContent = '0';
+            
+            // Hiển thị thông báo và link thủ công
+            document.querySelector('.manual-links').style.display = 'flex';
+        }
+
+        // Khởi chạy khi trang load
+        window.addEventListener('load', function() {
+            // Reset sessionStorage khi load trang mới (cho phép thử lại)
+            sessionStorage.removeItem('hasRedirected');
+            
+            // Bắt đầu vòng lặp phát hiện
+            startDetectionLoop();
+        });
+
+        // Kiểm tra lại khi resize màn hình (phòng trường hợp xoay màn hình)
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                console.log('Phát hiện thay đổi kích thước màn hình, kiểm tra lại...');
+                // Chỉ kiểm tra, không tự động chuyển hướng khi resize
+                const deviceInfo = detectDevice();
+                updateDeviceInfo(deviceInfo);
+            }, 500);
+        });
+
+        // Thêm meta tag để tránh cache
+        const meta = document.createElement('meta');
+        meta.httpEquiv = 'cache-control';
+        meta.content = 'no-cache, no-store, must-revalidate';
+        document.head.appendChild(meta);
+    </script>
+</body>
+</html>

@@ -1,0 +1,2412 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vấn Đề Đang Xảy Ra - FriendlyGuard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary: #28a745;
+            --primary-light: #71dd8a;
+            --secondary: #218838;
+            --success: #20c997;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #adb5bd;
+            --bg-color: #f5f7fb;
+            --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --sidebar-width: 400px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Header - CẢI THIỆN Z-INDEX */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1002; /* Tăng z-index để header nằm trên map */
+            height: 64px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo i {
+            font-size: 24px;
+        }
+        
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 14px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+        
+        .icon-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+        
+        .back-btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+            padding-top: 64px; /* Đẩy nội dung xuống dưới header */
+        }
+        
+        /* Sidebar - CẢI THIỆN GIAO DIỆN */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 1001;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .sidebar-header {
+            padding: 18px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            border-bottom: 1px solid #eee;
+            background: white;
+        }
+        
+        .sidebar-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .sidebar-header i {
+            color: var(--primary);
+        }
+        
+        /* NÚT MŨI TÊN KÉO RA KÉO VÀO */
+        .toggle-sidebar {
+            background: rgba(67, 97, 238, 0.9);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+            position: absolute;
+            left: calc(100% + 10px);
+            top: 20px;
+            z-index: 1003;
+            border-radius: 0 5px 5px 0;
+            padding: 10px 8px;
+            width: 24px;
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-sidebar:hover {
+            background: rgba(67, 97, 238, 1);
+            width: 28px;
+        }
+        
+        .toggle-sidebar.collapsed {
+            left: 0;
+            border-radius: 0 5px 5px 0;
+            transform: translateX(0);
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* THANH CÔNG CỤ TÌM KIẾM VÀ LỌC - CẢI THIỆN */
+        .sidebar-tools {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+            flex-shrink: 0;
+            transition: opacity 0.3s ease, height 0.3s ease;
+            opacity: 1;
+            height: auto;
+            overflow: hidden;
+        }
+        
+        .sidebar-tools.hidden {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            border: none;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+            background: white;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-light);
+            font-size: 16px;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: white;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 2px 5px rgba(67, 97, 238, 0.2);
+        }
+        
+        /* DANH SÁCH VẤN ĐỀ - CẢI THIỆN */
+        .issues-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .issues-list {
+            padding: 0;
+        }
+        
+        .issue-item {
+            padding: 15px;
+            margin: 0;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            position: relative;
+        }
+        
+        .issue-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .issue-item.active {
+            background: #e8f1ff;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .issue-item:last-child {
+            border-bottom: none;
+        }
+        
+        .issue-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-top: 3px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .issue-status.active {
+            background-color: var(--danger);
+            animation: pulse 2s infinite;
+        }
+        
+        .issue-status.resolved {
+            background-color: var(--success);
+        }
+        
+        .issue-status.report {
+            background-color: var(--warning);
+        }
+        
+        .issue-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .issue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+        
+        .issue-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+        
+        .issue-time {
+            font-size: 12px;
+            color: var(--gray);
+            white-space: nowrap;
+            margin-left: 8px;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        .issue-type {
+            display: inline-block;
+            padding: 3px 8px;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-right: 8px;
+            font-weight: 600;
+        }
+        
+        .issue-location {
+            font-size: 13px;
+            color: var(--gray);
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .issue-location i {
+            font-size: 12px;
+        }
+        
+        .issue-description {
+            font-size: 13px;
+            color: var(--dark);
+            margin-top: 8px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* CHI TIẾT VẤN ĐỀ - CẢI THIỆN */
+        .issue-details {
+            flex: 1;
+            padding: 0;
+            overflow-y: auto;
+            display: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .issue-details.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 15px;
+            flex-shrink: 0;
+        }
+        
+        .detail-header-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .back-to-list {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .back-to-list:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-2px);
+        }
+        
+        .detail-title {
+            font-size: 18px;
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .detail-status-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .detail-content {
+            padding: 20px 15px;
+            flex: 1;
+        }
+        
+        .detail-section {
+            margin-bottom: 25px;
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        
+        .detail-section h4 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .detail-section h4 i {
+            font-size: 14px;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .detail-value {
+            flex: 1;
+            color: var(--dark);
+            font-size: 14px;
+            word-break: break-word;
+        }
+        
+        /* STYLE CHO ẢNH BASE64 - ĐÃ THÊM VIỀN PHÁT SÁNG */
+        .report-images-container {
+            margin-top: 15px;
+        }
+        
+        .report-images-title {
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .report-images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .report-image-thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .report-image-thumbnail:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(67, 97, 238, 0.7);
+        }
+        
+        /* MODAL XEM ẢNH LỚN */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1004;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .image-modal-img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            color: white;
+            font-size: 16px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .notes-section {
+            margin-top: 5px;
+        }
+        
+        .notes-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .note-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-light);
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 6px;
+        }
+        
+        .note-content {
+            font-size: 14px;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+        
+        .add-note textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+        
+        .add-note textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 14px;
+            min-width: 140px;
+        }
+        
+        .chat-btn {
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+        }
+        
+        .chat-btn:hover {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .resolve-btn {
+            background: linear-gradient(to right, var(--success), #2ecc71);
+            color: white;
+        }
+        
+        .resolve-btn:hover {
+            background: linear-gradient(to right, #219653, #27ad60);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .delete-btn {
+            background: linear-gradient(to right, var(--danger), #ff4d6d);
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background: linear-gradient(to right, #c0392b, #e74c3c);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .no-issues {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+        
+        .no-issues i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .no-issues p {
+            font-size: 15px;
+        }
+        
+        .map-container {
+            flex: 1;
+            position: relative;
+            z-index: 1; /* Đảm bảo map nằm dưới header */
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        /* Animation for status pulse */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 6px rgba(247, 37, 133, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(247, 37, 133, 0);
+            }
+        }
+        
+        /* Leaflet map responsive adjustments */
+        .leaflet-control-zoom {
+            margin: 10px !important;
+        }
+        
+        .leaflet-control-zoom a {
+            width: 30px !important;
+            height: 30px !important;
+            line-height: 30px !important;
+            font-size: 18px !important;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px !important;
+            max-width: 280px !important;
+        }
+        
+        /* MODAL XÓA VẤN ĐỀ */
+        .delete-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1005;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .delete-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .delete-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            color: var(--danger);
+        }
+        
+        .delete-modal-header i {
+            font-size: 24px;
+        }
+        
+        .delete-modal-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .delete-modal-body {
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: var(--dark);
+        }
+        
+        .delete-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .modal-cancel-btn {
+            background: #f0f0f0;
+            color: var(--dark);
+        }
+        
+        .modal-cancel-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .modal-delete-btn {
+            background: linear-gradient(to right, var(--danger), #ff4d6d);
+            color: white;
+        }
+        
+        .modal-delete-btn:hover {
+            background: linear-gradient(to right, #c0392b, #e74c3c);
+            transform: translateY(-2px);
+        }
+        
+        /* Style cho admin button trong chat */
+        .admin-link-btn {
+            background: linear-gradient(to right, #9d4edd, #7b2cbf);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .admin-link-btn:hover {
+            background: linear-gradient(to right, #7b2cbf, #5a189a);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                height: calc(100% - 64px);
+                transform: translateX(-100%);
+                width: 90%;
+                max-width: 400px;
+                z-index: 1001;
+                top: 64px;
+                bottom: 0;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            }
+            
+            .toggle-sidebar {
+                display: flex;
+                position: fixed;
+                left: 0;
+                top: 84px;
+                z-index: 1003;
+                background: rgba(67, 97, 238, 0.9);
+            }
+            
+            .sidebar.open + .toggle-sidebar {
+                left: 90%;
+                border-radius: 0 5px 5px 0;
+            }
+            
+            .container {
+                height: calc(100vh - 64px);
+            }
+            
+            .logo h1 {
+                display: none;
+            }
+            
+            .logo i {
+                font-size: 22px;
+            }
+            
+            .detail-title {
+                font-size: 16px;
+            }
+            
+            .detail-section h4 {
+                font-size: 15px;
+            }
+            
+            .detail-label, .detail-value {
+                font-size: 13px;
+            }
+            
+            .action-btn {
+                padding: 10px 12px;
+                font-size: 13px;
+                min-width: 120px;
+            }
+            
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 13px;
+            }
+            
+            .icon-btn, .back-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 15px;
+            }
+            
+            .report-images-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
+            
+            .report-image-thumbnail {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .delete-modal-content {
+                padding: 20px;
+                max-width: 90%;
+            }
+            
+            .delete-modal-header h3 {
+                font-size: 18px;
+            }
+            
+            .modal-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 95%;
+            }
+            
+            .sidebar.open + .toggle-sidebar {
+                left: 95%;
+            }
+            
+            .sidebar-header {
+                padding: 15px;
+            }
+            
+            .detail-content {
+                padding: 15px;
+            }
+            
+            .detail-section {
+                padding: 15px;
+            }
+            
+            .detail-label {
+                min-width: 100px;
+                font-size: 13px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                padding: 12px;
+            }
+            
+            .toggle-sidebar {
+                top: 74px;
+                height: 45px;
+                padding: 8px 6px;
+            }
+            
+            .header-content {
+                padding: 0 12px;
+            }
+        }
+        
+        @media (min-width: 577px) {
+            .logo h1 {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sidebar-header h2 {
+                font-size: 16px;
+            }
+            
+            .note-item {
+                font-size: 13px;
+            }
+            
+            .note-content {
+                font-size: 13px;
+            }
+            
+            .add-note textarea {
+                font-size: 13px;
+            }
+            
+            .no-issues i {
+                font-size: 40px;
+            }
+            
+            .no-issues p {
+                font-size: 14px;
+            }
+            
+            .sidebar-tools {
+                padding: 12px;
+            }
+            
+            .filter-btn {
+                font-size: 12px;
+                padding: 5px 10px;
+            }
+            
+            .report-images-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+            
+            .report-image-thumbnail {
+                width: 60px;
+                height: 60px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .sidebar {
+                width: 100%;
+            }
+            
+            .sidebar.open + .toggle-sidebar {
+                left: 100%;
+            }
+            
+            .sidebar-header h2 {
+                font-size: 15px;
+            }
+            
+            .detail-section h4 {
+                font-size: 14px;
+            }
+            
+            .detail-label {
+                min-width: 90px;
+                font-size: 12px;
+            }
+            
+            .detail-value {
+                font-size: 12px;
+            }
+            
+            .toggle-sidebar {
+                top: 74px;
+                height: 40px;
+                padding: 7px 5px;
+            }
+            
+            .header-content {
+                padding: 0 10px;
+            }
+            
+            .action-btn {
+                font-size: 13px;
+                padding: 10px;
+            }
+            
+            .report-images-grid {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            }
+            
+            .report-image-thumbnail {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        /* Scrollbar styling */
+        .notes-list::-webkit-scrollbar,
+        .issue-details::-webkit-scrollbar,
+        .issues-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .notes-list::-webkit-scrollbar-track,
+        .issue-details::-webkit-scrollbar-track,
+        .issues-list-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .notes-list::-webkit-scrollbar-thumb,
+        .issue-details::-webkit-scrollbar-thumb,
+        .issues-list-container::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+        
+        .notes-list::-webkit-scrollbar-thumb:hover,
+        .issue-details::-webkit-scrollbar-thumb:hover,
+        .issues-list-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+        
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        /* Loading state */
+        .loading-issues {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+        
+        .loading-issues i {
+            font-size: 30px;
+            margin-bottom: 12px;
+            color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Badge for emergency status */
+        .emergency-badge {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar.collapsed + .toggle-sidebar {
+            left: 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Custom Circle Marker Style */
+        .circle-marker {
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border: 2px solid white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .circle-marker:hover {
+            transform: scale(1.2);
+            z-index: 1000;
+        }
+        
+        .circle-marker-emergency {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .circle-marker-report {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .circle-marker-resolved {
+            background-color: var(--success);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>FriendlyGuard</h1>
+            </a>
+            <div class="user-info">
+                <button class="back-btn" id="backBtn" title="Quay lại">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="header-actions">
+                    <div class="user-avatar" id="userAvatarHeader">A</div>
+                    <button class="icon-btn" id="logoutBtnHeader" title="Đăng xuất">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <button class="toggle-sidebar" id="toggleSidebar">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <!-- Header cố định với tiêu đề danh sách -->
+            <div class="sidebar-header" id="sidebarHeader">
+                <h2><i class="fas fa-list"></i> Danh sách vấn đề</h2>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Thanh công cụ tìm kiếm và lọc -->
+                <div class="sidebar-tools" id="sidebarTools">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchIssues" placeholder="Tìm kiếm...">
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-btn active" data-filter="all">Tất cả</button>
+                        <button class="filter-btn" data-filter="emergency">Khẩn cấp</button>
+                        <button class="filter-btn" data-filter="report">Báo cáo</button>
+                        <button class="filter-btn" data-filter="active">Đang xử lý</button>
+                        <button class="filter-btn" data-filter="resolved">Đã giải quyết</button>
+                    </div>
+                </div>
+
+                <!-- Danh sách vấn đề với scroll -->
+                <div class="issues-list-container" id="issuesListContainer">
+                    <div class="issues-list" id="issuesList">
+                        <!-- Issues will be populated here by JavaScript -->
+                        <div class="loading-issues">
+                            <i class="fas fa-spinner"></i>
+                            <p>Đang tải danh sách vấn đề...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chi tiết vấn đề (ẩn mặc định) -->
+                <div class="issue-details" id="issueDetails">
+                    <!-- Header của chi tiết vấn đề -->
+                    <div class="detail-header">
+                        <div class="detail-header-content">
+                            <button class="back-to-list" id="backToListBtn" title="Quay lại danh sách">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <div class="detail-title" id="detailTitle">Chi tiết vấn đề</div>
+                            <div class="detail-status-badge" id="detailStatusBadge">Đang xử lý</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nội dung chi tiết -->
+                    <div class="detail-content">
+                        <div class="detail-section">
+                            <h4><i class="fas fa-info-circle"></i> Thông Tin Sự Việc</h4>
+                            <div class="detail-item">
+                                <span class="detail-label">Loại vấn đề:</span>
+                                <span class="detail-value" id="detailType">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Thời gian báo cáo:</span>
+                                <span class="detail-value" id="detailTime">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Vị trí:</span>
+                                <span class="detail-value" id="detailLocation">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Mô tả:</span>
+                                <span class="detail-value" id="detailDescription">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Trạng thái:</span>
+                                <span class="detail-value" id="detailStatus">-</span>
+                            </div>
+                            
+                            <!-- Hiển thị ảnh từ báo cáo -->
+                            <div class="report-images-container" id="reportImagesContainer" style="display: none;">
+                                <div class="report-images-title">
+                                    <i class="fas fa-images"></i> Hình ảnh báo cáo:
+                                </div>
+                                <div class="report-images-grid" id="reportImagesGrid">
+                                    <!-- Ảnh sẽ được thêm vào đây -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h4><i class="fas fa-user"></i> Người Báo Cáo</h4>
+                            <div class="detail-item">
+                                <span class="detail-label">Tên:</span>
+                                <span class="detail-value" id="detailReporter">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Email:</span>
+                                <span class="detail-value" id="detailReporterEmail">-</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-section notes-section">
+                            <h4><i class="fas fa-sticky-note"></i> Ghi Chú</h4>
+                            <div class="notes-list" id="notesList">
+                                <!-- Notes will be populated here -->
+                                <div class="note-item">
+                                    <div class="note-header">
+                                        <span>Hệ thống</span>
+                                        <span>Vừa xong</span>
+                                    </div>
+                                    <div class="note-content">Chưa có ghi chú nào được thêm vào</div>
+                                </div>
+                            </div>
+                            <div class="add-note">
+                                <textarea id="newNote" placeholder="Nhập ghi chú mới..."></textarea>
+                                <button class="action-btn chat-btn" id="addNoteBtn">
+                                    <i class="fas fa-plus"></i> Thêm Ghi Chú
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="action-btn chat-btn" id="goToChatBtn">
+                                <i class="fas fa-comments"></i> Đến Cuộc Trò Chuyện
+                            </button>
+                            <button class="action-btn resolve-btn" id="resolveBtn">
+                                <i class="fas fa-check"></i> Giải Quyết
+                            </button>
+                            <button class="action-btn delete-btn" id="deleteBtn">
+                                <i class="fas fa-trash"></i> Xóa Vấn Đề
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- Modal xem ảnh lớn -->
+    <div class="image-modal" id="imageModal">
+        <div class="image-modal-content">
+            <img class="image-modal-img" id="modalImage" src="" alt="Ảnh báo cáo">
+            <button class="close-modal" id="closeImageModal">&times;</button>
+            <div class="image-counter" id="imageCounter">1/1</div>
+        </div>
+    </div>
+
+    <!-- Modal xóa vấn đề -->
+    <div class="delete-modal" id="deleteModal">
+        <div class="delete-modal-content">
+            <div class="delete-modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Xác nhận xóa vấn đề</h3>
+            </div>
+            <div class="delete-modal-body" id="deleteModalBody">
+                Bạn có chắc chắn muốn xóa vấn đề này? Hành động này không thể hoàn tác. Tất cả dữ liệu liên quan bao gồm tin nhắn, hình ảnh và ghi chú sẽ bị xóa vĩnh viễn.
+            </div>
+            <div class="delete-modal-footer">
+                <button class="modal-btn modal-cancel-btn" id="cancelDeleteBtn">Hủy</button>
+                <button class="modal-btn modal-delete-btn" id="confirmDeleteBtn">Xóa vĩnh viễn</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCq67Pm6oXQqC4hzShZyMW3XXuFdzuYeog",
+            authDomain: "blhd-ce0b8.firebaseapp.com",
+            projectId: "blhd-ce0b8",
+            storageBucket: "blhd-ce0b8.firebasestorage.app",
+            messagingSenderId: "1062247219518",
+            appId: "1:1062247219518:web:23e17dd2dd8698d46bac6f",
+            measurementId: "G-K7JLBH42RN"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let map = null;
+        let issues = [];
+        let filteredIssues = [];
+        let markers = [];
+        let selectedIssue = null;
+        let currentFilter = 'all';
+        let currentSearch = '';
+        let currentImages = [];
+        let currentImageIndex = 0;
+        let issueToDelete = null;
+
+        // Check authentication and admin status
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('userAvatarHeader').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
+                
+                // Check if user is admin
+                checkAdminStatus(user);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Back button
+        document.getElementById('backBtn').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+
+        // Logout button
+        document.getElementById('logoutBtnHeader').addEventListener('click', function() {
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        });
+
+        // Toggle sidebar cho mobile (mũi tên kéo ra kéo vào)
+        document.getElementById('toggleSidebar').addEventListener('click', toggleSidebar);
+        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+        // Back to list button in detail view
+        document.getElementById('backToListBtn').addEventListener('click', function() {
+            showIssuesList();
+        });
+
+        // Modal ảnh
+        document.getElementById('closeImageModal').addEventListener('click', function() {
+            document.getElementById('imageModal').style.display = 'none';
+        });
+
+        // Đóng modal khi click bên ngoài
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // Modal xóa
+        document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
+            closeDeleteModal();
+        });
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', deleteIssueConfirm);
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const icon = toggleBtn.querySelector('i');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+                
+                // Đổi icon mũi tên
+                if (sidebar.classList.contains('open')) {
+                    icon.className = 'fas fa-chevron-left';
+                } else {
+                    icon.className = 'fas fa-chevron-right';
+                }
+            }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const icon = toggleBtn.querySelector('i');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            icon.className = 'fas fa-chevron-right';
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Update current filter
+                currentFilter = this.dataset.filter;
+                
+                // Filter and display issues
+                filterAndDisplayIssues();
+            });
+        });
+
+        // Search input
+        document.getElementById('searchIssues').addEventListener('input', function(e) {
+            currentSearch = e.target.value.toLowerCase();
+            filterAndDisplayIssues();
+        });
+
+        // Check if user is admin
+        function checkAdminStatus(user) {
+            db.collection('users').doc(user.uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        if (userData.role === 'admin' || user.email.endsWith('@admin.com')) {
+                            initMap();
+                            loadIssues();
+                            // Chạy kiểm tra xóa vấn đề cũ tự động
+                            checkAndDeleteOldResolvedIssues();
+                            // Kiểm tra xem có issueId trong URL không
+                            checkUrlForIssueId();
+                        } else {
+                            alert('Bạn không có quyền truy cập trang này');
+                            window.location.href = 'index.html';
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error checking admin status:', error);
+                    window.location.href = 'index.html';
+                });
+        }
+
+        // Kiểm tra URL có chứa issueId không
+        function checkUrlForIssueId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const issueId = urlParams.get('id');
+            
+            if (issueId) {
+                // Tìm issue trong danh sách
+                const checkInterval = setInterval(() => {
+                    if (issues.length > 0) {
+                        clearInterval(checkInterval);
+                        const targetIssue = issues.find(issue => issue.id === issueId);
+                        if (targetIssue) {
+                            // Chọn issue từ URL
+                            selectIssueFromList(targetIssue);
+                            // Xóa tham số từ URL
+                            const url = new URL(window.location);
+                            url.searchParams.delete('id');
+                            window.history.replaceState({}, '', url);
+                        } else {
+                            console.log('Không tìm thấy issue với ID:', issueId);
+                        }
+                    }
+                }, 100);
+                
+                setTimeout(() => clearInterval(checkInterval), 5000);
+            }
+        }
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([10.8231, 106.6297], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Get user's current location with high accuracy
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        map.setView([position.coords.latitude, position.coords.longitude], 15);
+                    },
+                    function(error) {
+                        console.log('Could not get current location:', error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
+                    }
+                );
+            }
+        }
+
+        // Kiểm tra và xóa các vấn đề đã giải quyết sau 3 ngày
+        function checkAndDeleteOldResolvedIssues() {
+            const threeDaysAgo = new Date();
+            threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+            
+            db.collection('chats')
+                .where('isEmergency', '==', true)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const chatData = doc.data();
+                        if (chatData.emergencyData && chatData.emergencyData.status === 'resolved') {
+                            const resolvedTime = chatData.emergencyData.resolvedAt 
+                                ? chatData.emergencyData.resolvedAt.toDate() 
+                                : chatData.emergencyData.timestamp.toDate();
+                            
+                            if (resolvedTime < threeDaysAgo) {
+                                // Xóa vấn đề đã giải quyết sau 3 ngày
+                                db.collection('chats').doc(doc.id).delete()
+                                    .then(() => {
+                                        console.log('Đã xóa vấn đề cũ:', doc.id);
+                                    })
+                                    .catch((error) => {
+                                        console.error('Lỗi khi xóa vấn đề cũ:', error);
+                                    });
+                            }
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error('Lỗi khi kiểm tra vấn đề cũ:', error);
+                });
+            
+            // Tương tự cho báo cáo
+            db.collection('chats')
+                .where('isReport', '==', true)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const chatData = doc.data();
+                        if (chatData.reportData && chatData.reportData.status === 'resolved') {
+                            const resolvedTime = chatData.reportData.resolvedAt 
+                                ? chatData.reportData.resolvedAt.toDate() 
+                                : chatData.reportData.timestamp.toDate();
+                            
+                            if (resolvedTime < threeDaysAgo) {
+                                // Xóa báo cáo đã giải quyết sau 3 ngày
+                                db.collection('chats').doc(doc.id).delete()
+                                    .then(() => {
+                                        console.log('Đã xóa báo cáo cũ:', doc.id);
+                                    })
+                                    .catch((error) => {
+                                        console.error('Lỗi khi xóa báo cáo cũ:', error);
+                                    });
+                            }
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error('Lỗi khi kiểm tra báo cáo cũ:', error);
+                });
+        }
+
+        // Load issues from Firestore
+        function loadIssues() {
+            db.collection('chats')
+                .where('participants', 'array-contains', currentUser.uid)
+                .onSnapshot((querySnapshot) => {
+                    issues = [];
+                    querySnapshot.forEach((doc) => {
+                        const chatData = doc.data();
+                        if (chatData.isEmergency || chatData.isReport) {
+                            issues.push({
+                                id: doc.id,
+                                ...chatData
+                            });
+                        }
+                    });
+                    
+                    // Sắp xếp theo thời gian mới nhất lên đầu
+                    issues.sort((a, b) => {
+                        const aTime = a.isEmergency ? a.emergencyData?.timestamp : a.reportData?.timestamp;
+                        const bTime = b.isEmergency ? b.emergencyData?.timestamp : b.reportData?.timestamp;
+                        
+                        const aDate = aTime ? (aTime.toDate ? aTime.toDate() : new Date(aTime)) : new Date(0);
+                        const bDate = bTime ? (bTime.toDate ? bTime.toDate() : new Date(bTime)) : new Date(0);
+                        
+                        return bDate - aDate; // Mới nhất lên đầu
+                    });
+                    
+                    // Update filtered issues and display
+                    filterAndDisplayIssues();
+                    
+                    // Update markers on map
+                    updateMapMarkers();
+                });
+        }
+
+        // Filter and display issues
+        function filterAndDisplayIssues() {
+            filteredIssues = issues.filter(issue => {
+                const issueData = issue.isEmergency ? issue.emergencyData : issue.reportData;
+                if (!issueData) return false;
+                
+                // Apply search filter
+                if (currentSearch) {
+                    const searchText = currentSearch.toLowerCase();
+                    const typeMatch = (issueData.type || '').toLowerCase().includes(searchText);
+                    const descMatch = (issueData.description || '').toLowerCase().includes(searchText);
+                    const reporterMatch = (issue.participantInfo || {})[issueData.reporter]?.displayName?.toLowerCase().includes(searchText);
+                    
+                    if (!typeMatch && !descMatch && !reporterMatch) return false;
+                }
+                
+                // Apply category filter
+                if (currentFilter === 'emergency' && !issue.isEmergency) return false;
+                if (currentFilter === 'report' && !issue.isReport) return false;
+                if (currentFilter === 'active' && issueData.status !== 'active') return false;
+                if (currentFilter === 'resolved' && issueData.status !== 'resolved') return false;
+                
+                return true;
+            });
+            
+            // Giữ nguyên thứ tự đã sắp xếp (mới nhất lên đầu)
+            displayIssuesList();
+        }
+
+        // Display issues in the sidebar list
+        function displayIssuesList() {
+            const issuesList = document.getElementById('issuesList');
+            
+            if (filteredIssues.length === 0) {
+                issuesList.innerHTML = `
+                    <div class="no-issues">
+                        <i class="fas fa-inbox"></i>
+                        <p>${currentSearch || currentFilter !== 'all' ? 'Không tìm thấy vấn đề phù hợp' : 'Chưa có vấn đề nào'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            issuesList.innerHTML = '';
+            
+            filteredIssues.forEach(issue => {
+                const issueData = issue.isEmergency ? issue.emergencyData : issue.reportData;
+                if (!issueData) return;
+                
+                const issueItem = document.createElement('div');
+                issueItem.className = 'issue-item';
+                if (selectedIssue && selectedIssue.id === issue.id) {
+                    issueItem.classList.add('active');
+                }
+                
+                issueItem.dataset.issueId = issue.id;
+                
+                // Status indicator
+                const statusIndicator = document.createElement('div');
+                statusIndicator.className = 'issue-status';
+                if (issueData.status === 'resolved') {
+                    statusIndicator.classList.add('resolved');
+                } else if (issue.isEmergency) {
+                    statusIndicator.classList.add('active');
+                } else {
+                    statusIndicator.classList.add('report');
+                }
+                
+                // Issue content
+                const issueContent = document.createElement('div');
+                issueContent.className = 'issue-content';
+                
+                // Header with title and time
+                const issueHeader = document.createElement('div');
+                issueHeader.className = 'issue-header';
+                
+                const issueTitle = document.createElement('div');
+                issueTitle.className = 'issue-title';
+                issueTitle.textContent = issue.name || `Vấn đề ${issue.id.substring(0, 8)}`;
+                
+                const issueTime = document.createElement('div');
+                issueTime.className = 'issue-time';
+                issueTime.textContent = formatTime(issueData.timestamp);
+                
+                issueHeader.appendChild(issueTitle);
+                issueHeader.appendChild(issueTime);
+                
+                // Type and location
+                const issueType = document.createElement('div');
+                issueType.className = 'issue-type';
+                issueType.textContent = issue.isEmergency ? 'KHẨN CẤP' : 'BÁO CÁO';
+                
+                const issueLocation = document.createElement('div');
+                issueLocation.className = 'issue-location';
+                if (issueData.location) {
+                    const lat = issueData.location.lat || issueData.location.latitude;
+                    const lng = issueData.location.lng || issueData.location.longitude;
+                    if (lat && lng) {
+                        issueLocation.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                    } else {
+                        issueLocation.textContent = 'Vị trí không xác định';
+                    }
+                } else {
+                    issueLocation.textContent = 'Vị trí không xác định';
+                }
+                
+                // Description
+                const issueDescription = document.createElement('div');
+                issueDescription.className = 'issue-description';
+                issueDescription.textContent = issueData.description || issueData.type || 'Không có mô tả';
+                
+                // Assemble content
+                issueContent.appendChild(issueHeader);
+                issueContent.appendChild(issueType);
+                issueContent.appendChild(issueLocation);
+                issueContent.appendChild(issueDescription);
+                
+                // Assemble item
+                issueItem.appendChild(statusIndicator);
+                issueItem.appendChild(issueContent);
+                
+                // Add click event
+                issueItem.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectIssueFromList(issue);
+                });
+                
+                issuesList.appendChild(issueItem);
+            });
+        }
+
+        // Select issue from list
+        function selectIssueFromList(issue) {
+            selectedIssue = issue;
+            
+            // Update active state in list
+            document.querySelectorAll('.issue-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.issueId === issue.id) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Show details view and hide list
+            showIssueDetails(issue);
+            
+            // Update issue details
+            updateIssueDetails(issue);
+            
+            // Highlight marker on map
+            highlightMarkerOnMap(issue.id);
+            
+            // Pan to marker
+            const issueData = issue.isEmergency ? issue.emergencyData : issue.reportData;
+            if (issueData && issueData.location) {
+                const lat = issueData.location.lat || issueData.location.latitude;
+                const lng = issueData.location.lng || issueData.location.longitude;
+                if (lat && lng) {
+                    map.setView([lat, lng], 15);
+                }
+            }
+            
+            // Open sidebar on mobile if viewing details
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.add('open');
+                document.getElementById('sidebarOverlay').classList.add('active');
+                document.getElementById('toggleSidebar').querySelector('i').className = 'fas fa-chevron-left';
+            }
+        }
+
+        // Show issue details view
+        function showIssueDetails(issue) {
+            document.getElementById('issuesListContainer').style.display = 'none';
+            document.getElementById('issueDetails').classList.add('active');
+            document.getElementById('sidebarTools').classList.add('hidden');
+            document.getElementById('sidebarHeader').innerHTML = `<h2><i class="fas fa-info-circle"></i> Chi tiết vấn đề</h2>`;
+        }
+
+        // Show issues list view
+        function showIssuesList() {
+            document.getElementById('issuesListContainer').style.display = 'block';
+            document.getElementById('issueDetails').classList.remove('active');
+            document.getElementById('sidebarTools').classList.remove('hidden');
+            document.getElementById('sidebarHeader').innerHTML = `<h2><i class="fas fa-list"></i> Danh sách vấn đề</h2>`;
+            
+            // Clear selected issue
+            selectedIssue = null;
+            document.querySelectorAll('.issue-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        // Update map markers - SỬA LẠI THÀNH HÌNH TRÒN
+        function updateMapMarkers() {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            filteredIssues.forEach(issue => {
+                const issueData = issue.isEmergency ? issue.emergencyData : issue.reportData;
+                if (!issueData || !issueData.location) return;
+                
+                // Set marker color based on status
+                let markerColor = 'red';
+                let markerClass = 'circle-marker-emergency';
+                let markerIcon = '🚨';
+                
+                if (issueData.status === 'resolved') {
+                    markerColor = 'green';
+                    markerClass = 'circle-marker-resolved';
+                    markerIcon = '✓';
+                } else if (issue.isEmergency) {
+                    markerColor = 'red';
+                    markerClass = 'circle-marker-emergency';
+                    markerIcon = '🚨';
+                } else {
+                    markerColor = 'gold';
+                    markerClass = 'circle-marker-report';
+                    markerIcon = '📋';
+                }
+                
+                // Ensure location has lat/lng properties
+                const location = issueData.location;
+                const lat = location.lat || location.latitude;
+                const lng = location.lng || location.longitude;
+                
+                if (!lat || !lng) return;
+                
+                // Tạo nội dung popup đơn giản, không hiển thị ảnh
+                let popupContent = `
+                    <div style="max-width: 250px;">
+                        <b>${issue.isEmergency ? '🚨 KHẨN CẤP' : '📋 BÁO CÁO'}</b><br>
+                        <b>Loại:</b> ${issueData.type || 'Không xác định'}<br>
+                        <b>Thời gian:</b> ${formatTime(issueData.timestamp)}<br>
+                        <b>Trạng thái:</b> ${issueData.status === 'active' ? 'Đang xử lý' : 'Đã giải quyết'}<br>
+                        <b>Mô tả:</b> ${(issueData.description || '').substring(0, 100)}${issueData.description && issueData.description.length > 100 ? '...' : ''}
+                    </div>
+                `;
+                
+                // Tạo marker hình tròn tùy chỉnh
+                const circleMarker = L.marker([lat, lng], {
+                    icon: L.divIcon({
+                        className: 'circle-marker ' + markerClass,
+                        html: markerIcon,
+                        iconSize: [24, 24],
+                        iconAnchor: [12, 12],
+                        popupAnchor: [0, -12]
+                    })
+                })
+                .addTo(map)
+                .bindPopup(popupContent);
+
+                circleMarker.on('click', () => {
+                    selectIssueFromList(issue);
+                });
+
+                // Store reference to issue
+                circleMarker.issueId = issue.id;
+                markers.push(circleMarker);
+            });
+        }
+
+        // Highlight marker on map
+        function highlightMarkerOnMap(issueId) {
+            markers.forEach(marker => {
+                if (marker.issueId === issueId) {
+                    marker.openPopup();
+                    
+                    // Add highlight effect
+                    const iconElement = marker.getElement();
+                    if (iconElement) {
+                        iconElement.style.transform = 'scale(1.3)';
+                        iconElement.style.zIndex = '1000';
+                        iconElement.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+                        
+                        setTimeout(() => {
+                            iconElement.style.transform = 'scale(1)';
+                            iconElement.style.boxShadow = 'none';
+                        }, 1000);
+                    }
+                }
+            });
+        }
+
+        // Update issue details
+        function updateIssueDetails(issue) {
+            const issueData = issue.isEmergency ? issue.emergencyData : issue.reportData;
+            
+            if (!issueData) return;
+            
+            // Update title
+            document.getElementById('detailTitle').textContent = issue.name || `Vấn đề ${issue.id.substring(0, 8)}`;
+            
+            // Update status badge
+            const statusBadge = document.getElementById('detailStatusBadge');
+            if (issueData.status === 'resolved') {
+                statusBadge.textContent = 'Đã giải quyết';
+                statusBadge.style.background = 'rgba(76, 201, 240, 0.8)';
+            } else {
+                statusBadge.textContent = 'Đang xử lý';
+                statusBadge.style.background = issue.isEmergency ? 'rgba(247, 37, 133, 0.8)' : 'rgba(248, 150, 30, 0.8)';
+            }
+            
+            // Update details
+            document.getElementById('detailType').textContent = issueData.type || 'Không xác định';
+            document.getElementById('detailTime').textContent = formatTime(issueData.timestamp);
+            
+            if (issueData.location) {
+                const lat = issueData.location.lat || issueData.location.latitude;
+                const lng = issueData.location.lng || issueData.location.longitude;
+                document.getElementById('detailLocation').textContent = 
+                    `${lat ? lat.toFixed(6) : 'N/A'}, ${lng ? lng.toFixed(6) : 'N/A'}`;
+            } else {
+                document.getElementById('detailLocation').textContent = 'Không xác định';
+            }
+            
+            document.getElementById('detailDescription').textContent = 
+                issueData.description || (issue.isEmergency ? `Tình huống khẩn cấp: ${issueData.type || 'Không xác định'}` : 'Không có mô tả');
+            document.getElementById('detailStatus').textContent = 
+                issueData.status === 'active' ? 'Đang xử lý' : 'Đã giải quyết';
+            
+            // Reporter info
+            const reporterId = issueData.reporter;
+            if (reporterId && issue.participantInfo && issue.participantInfo[reporterId]) {
+                document.getElementById('detailReporter').textContent = issue.participantInfo[reporterId].displayName || 'Không xác định';
+                document.getElementById('detailReporterEmail').textContent = issue.participantInfo[reporterId].email || 'Không xác định';
+            } else {
+                document.getElementById('detailReporter').textContent = 'Không xác định';
+                document.getElementById('detailReporterEmail').textContent = 'Không xác định';
+            }
+
+            // Hiển thị ảnh từ báo cáo
+            displayReportImages(issueData.images || []);
+
+            // Load notes
+            loadNotes(issue.id);
+        }
+
+        // Display report images
+        function displayReportImages(images) {
+            const container = document.getElementById('reportImagesContainer');
+            const grid = document.getElementById('reportImagesGrid');
+            
+            // Clear existing images
+            grid.innerHTML = '';
+            currentImages = [];
+            
+            if (images && images.length > 0) {
+                container.style.display = 'block';
+                currentImages = images;
+                
+                images.forEach((imgSrc, index) => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.style.position = 'relative';
+                    
+                    const img = document.createElement('img');
+                    img.className = 'report-image-thumbnail';
+                    img.src = imgSrc;
+                    img.alt = `Ảnh báo cáo ${index + 1}`;
+                    img.title = 'Nhấp để xem ảnh lớn';
+                    
+                    img.addEventListener('click', () => {
+                        openImageModal(index);
+                    });
+                    
+                    imgContainer.appendChild(img);
+                    grid.appendChild(imgContainer);
+                });
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        // Open image modal
+        function openImageModal(index) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const imageCounter = document.getElementById('imageCounter');
+            
+            currentImageIndex = index;
+            modalImg.src = currentImages[index];
+            imageCounter.textContent = `${index + 1}/${currentImages.length}`;
+            modal.style.display = 'flex';
+        }
+
+        // Load notes for an issue
+        function loadNotes(chatId) {
+            const notesList = document.getElementById('notesList');
+            notesList.innerHTML = '';
+
+            db.collection('chats').doc(chatId).collection('notes')
+                .orderBy('timestamp', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        notesList.innerHTML = `
+                            <div class="note-item">
+                                <div class="note-header">
+                                    <span>Hệ thống</span>
+                                    <span>Vừa xong</span>
+                                </div>
+                                <div class="note-content">Chưa có ghi chú nào được thêm vào</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    querySnapshot.forEach((doc) => {
+                        const note = doc.data();
+                        const noteItem = document.createElement('div');
+                        noteItem.className = 'note-item';
+                        noteItem.innerHTML = `
+                            <div class="note-header">
+                                <span>${note.author || 'Không xác định'}</span>
+                                <span>${formatTime(note.timestamp)}</span>
+                            </div>
+                            <div class="note-content">${note.content || ''}</div>
+                        `;
+                        notesList.appendChild(noteItem);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error loading notes:', error);
+                    notesList.innerHTML = '<div class="note-item">Lỗi khi tải ghi chú</div>';
+                });
+        }
+
+        // Add new note
+        document.getElementById('addNoteBtn').addEventListener('click', function() {
+            if (!selectedIssue) {
+                alert('Vui lòng chọn một vấn đề trước');
+                return;
+            }
+
+            const noteContent = document.getElementById('newNote').value.trim();
+            if (!noteContent) {
+                alert('Vui lòng nhập nội dung ghi chú');
+                return;
+            }
+
+            db.collection('chats').doc(selectedIssue.id).collection('notes').add({
+                content: noteContent,
+                author: currentUser.displayName || currentUser.email,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                document.getElementById('newNote').value = '';
+                loadNotes(selectedIssue.id);
+            })
+            .catch((error) => {
+                console.error('Error adding note:', error);
+                alert('Lỗi khi thêm ghi chú');
+            });
+        });
+
+        // Go to chat
+        document.getElementById('goToChatBtn').addEventListener('click', function() {
+            if (!selectedIssue) {
+                alert('Vui lòng chọn một vấn đề trước');
+                return;
+            }
+
+            // Lưu thông tin chat đang chọn vào localStorage
+            localStorage.setItem('selectedChatId', selectedIssue.id);
+            localStorage.setItem('selectedChatName', selectedIssue.name || `Vấn đề ${selectedIssue.id.substring(0, 8)}`);
+            
+            // Chuyển hướng đến chatbox với tham số chatId
+            window.location.href = `chatbox.html?chatId=${selectedIssue.id}`;
+        });
+
+        // Resolve issue
+        document.getElementById('resolveBtn').addEventListener('click', function() {
+            if (!selectedIssue) return;
+
+            const issueDataField = selectedIssue.isEmergency ? 'emergencyData' : 'reportData';
+            
+            db.collection('chats').doc(selectedIssue.id).update({
+                [`${issueDataField}.status`]: 'resolved',
+                [`${issueDataField}.resolvedAt`]: firebase.firestore.FieldValue.serverTimestamp(),
+                [`${issueDataField}.resolvedBy`]: currentUser.uid
+            })
+            .then(() => {
+                alert('Đã đánh dấu vấn đề là đã giải quyết');
+                
+                // Cập nhật UI
+                const issueItem = document.querySelector(`.issue-item[data-issue-id="${selectedIssue.id}"]`);
+                if (issueItem) {
+                    const statusIndicator = issueItem.querySelector('.issue-status');
+                    statusIndicator.classList.remove('active', 'report');
+                    statusIndicator.classList.add('resolved');
+                }
+                
+                // Cập nhật chi tiết
+                updateIssueDetails(selectedIssue);
+                
+                // Cập nhật marker trên map
+                updateMapMarkers();
+            })
+            .catch((error) => {
+                console.error('Error resolving issue:', error);
+                alert('Lỗi khi cập nhật trạng thái');
+            });
+        });
+
+        // Show delete modal
+        document.getElementById('deleteBtn').addEventListener('click', function() {
+            if (!selectedIssue) return;
+            
+            issueToDelete = selectedIssue;
+            showDeleteModal();
+        });
+
+        // Show delete modal
+        function showDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.style.display = 'flex';
+        }
+
+        // Close delete modal
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.style.display = 'none';
+            issueToDelete = null;
+        }
+
+        // Delete issue confirmed
+        function deleteIssueConfirm() {
+            if (!issueToDelete) return;
+
+            db.collection('chats').doc(issueToDelete.id).delete()
+                .then(() => {
+                    closeDeleteModal();
+                    
+                    // Quay lại danh sách
+                    showIssuesList();
+                    
+                    // Xóa khỏi danh sách
+                    const issueItem = document.querySelector(`.issue-item[data-issue-id="${issueToDelete.id}"]`);
+                    if (issueItem) {
+                        issueItem.remove();
+                    }
+                    
+                    // Reset selected issue
+                    selectedIssue = null;
+                    
+                    // Cập nhật map
+                    updateMapMarkers();
+                    
+                    // Hiển thị thông báo thành công
+                    alert('Đã xóa vấn đề thành công');
+                })
+                .catch((error) => {
+                    console.error('Error deleting issue:', error);
+                    alert('Lỗi khi xóa vấn đề');
+                    closeDeleteModal();
+                });
+        }
+
+        // Format time function
+        function formatTime(timestamp) {
+            if (!timestamp) return 'Không xác định';
+            
+            try {
+                const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffDays = Math.floor(diffMs / 86400000);
+                
+                if (diffMins < 1) return 'Vừa xong';
+                if (diffMins < 60) return `${diffMins} phút trước`;
+                if (diffHours < 24) return `${diffHours} giờ trước`;
+                if (diffDays < 7) return `${diffDays} ngày trước`;
+                
+                return date.toLocaleDateString('vi-VN', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (error) {
+                console.error('Error formatting time:', error);
+                return 'Không xác định';
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeSidebar();
+            }
+        });
+
+        // Handle ESC key to close sidebar or details
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const imageModal = document.getElementById('imageModal');
+                const deleteModal = document.getElementById('deleteModal');
+                
+                if (imageModal.style.display === 'flex') {
+                    imageModal.style.display = 'none';
+                } else if (deleteModal.style.display === 'flex') {
+                    closeDeleteModal();
+                } else if (document.getElementById('issueDetails').classList.contains('active')) {
+                    showIssuesList();
+                } else {
+                    closeSidebar();
+                }
+            }
+        });
+
+        // Tự động chọn issue đầu tiên nếu có
+        setTimeout(() => {
+            if (filteredIssues.length > 0 && !selectedIssue) {
+                selectIssueFromList(filteredIssues[0]);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
