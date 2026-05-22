@@ -39,7 +39,7 @@
             overflow: hidden;
         }
         
-        /* Header - Always visible */
+        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -76,7 +76,6 @@
         .logo h1 {
             font-size: 20px;
             font-weight: 700;
-            /* Luôn hiển thị dù màn hình nhỏ hay lớn */
             display: block !important;
         }
         
@@ -234,7 +233,6 @@
             flex: 1;
             overflow-y: auto;
             padding: 10px 0;
-            -webkit-overflow-scrolling: touch;
         }
         
         .chat-item {
@@ -245,6 +243,7 @@
             align-items: center;
             transition: background 0.2s;
             min-height: 70px;
+            position: relative;
         }
         
         .chat-item:hover {
@@ -254,6 +253,27 @@
         .chat-item.active {
             background-color: #e7f3ff;
             border-left: 4px solid var(--primary);
+        }
+        
+        .chat-item.has-unread {
+            background-color: #fff3e0;
+        }
+        
+        .unread-badge {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
         }
         
         .chat-avatar {
@@ -300,15 +320,6 @@
             color: var(--gray);
         }
         
-        .unread-indicator {
-            width: 10px;
-            height: 10px;
-            background-color: var(--danger);
-            border-radius: 50%;
-            margin-left: 8px;
-            flex-shrink: 0;
-        }
-        
         .chat-area {
             flex: 1;
             display: flex;
@@ -350,7 +361,6 @@
             text-overflow: ellipsis;
         }
         
-        /* Nút mới trong header */
         .admin-link-btn {
             background: linear-gradient(to right, #9d4edd, #7b2cbf);
             color: white;
@@ -372,10 +382,8 @@
         .admin-link-btn:hover {
             background: linear-gradient(to right, #7b2cbf, #5a189a);
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
-        /* Nút bật/tắt AI */
         .ai-toggle-btn {
             background: linear-gradient(to right, #10b981, #059669);
             color: white;
@@ -388,7 +396,6 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: var(--transition);
             white-space: nowrap;
             flex-shrink: 0;
         }
@@ -398,24 +405,11 @@
             opacity: 0.8;
         }
         
-        .ai-toggle-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .ai-toggle-btn.ai-off:hover {
-            background: linear-gradient(to right, #059669, #047857);
-            opacity: 1;
-        }
-        
         .chat-messages {
             flex: 1;
             padding: 15px;
             overflow-y: auto;
             background-color: var(--bg-color);
-            -webkit-overflow-scrolling: touch;
-            will-change: scroll-position;
-            contain: content;
         }
         
         .message {
@@ -427,9 +421,11 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.2s ease;
             word-wrap: break-word;
-            overflow-wrap: break-word;
-            transform: translateZ(0);
-            backface-visibility: hidden;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .message.sent {
@@ -528,10 +524,6 @@
             background: linear-gradient(to right, var(--success), #2ecc71);
         }
         
-        .image-btn:hover {
-            background: linear-gradient(to right, #219653, #27ad60);
-        }
-        
         .no-chat-selected {
             flex: 1;
             display: flex;
@@ -550,31 +542,6 @@
             color: #ccc;
         }
         
-        .image-preview {
-            max-width: 200px;
-            margin-top: 10px;
-            border-radius: 10px;
-            display: none;
-        }
-        
-        .remove-image {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        /* Menu toggle button */
         .menu-toggle {
             background: var(--primary);
             border: none;
@@ -593,190 +560,8 @@
         
         .menu-toggle:hover {
             background: var(--secondary);
-            transform: scale(1.05);
         }
         
-        /* Animation for chat switching */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                height: 100vh;
-                top: 0;
-                left: 0;
-                transform: translateX(-100%);
-                width: 85%;
-                max-width: 320px;
-                z-index: 1000;
-                border-radius: 0;
-            }
-            
-            .sidebar.open {
-                transform: translateX(0);
-                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-            }
-            
-            .message {
-                max-width: 90%;
-            }
-            
-            .chat-avatar {
-                width: 40px;
-                height: 40px;
-                font-size: 15px;
-                margin-right: 10px;
-            }
-            
-            .chat-item {
-                padding: 10px 12px;
-                min-height: 65px;
-            }
-            
-            .chat-input-container {
-                padding: 10px 12px;
-                gap: 6px;
-            }
-            
-            .chat-input {
-                padding: 8px 12px;
-                font-size: 13px;
-            }
-            
-            .send-btn, .image-btn {
-                width: 38px;
-                height: 38px;
-            }
-            
-            .logo h1 {
-                display: block !important;
-                font-size: 18px;
-            }
-            
-            .user-avatar {
-                width: 38px;
-                height: 38px;
-                font-size: 13px;
-            }
-            
-            .icon-btn, .back-btn {
-                width: 38px;
-                height: 38px;
-                font-size: 15px;
-            }
-            
-            .chat-messages {
-                padding: 12px;
-            }
-            
-            .message {
-                padding: 8px 12px;
-            }
-            
-            .message-text {
-                font-size: 13px;
-            }
-            
-            .header-content {
-                padding: 0 12px;
-            }
-            
-            .admin-link-btn, .ai-toggle-btn {
-                padding: 5px 12px;
-                font-size: 11px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .sidebar {
-                width: 90%;
-                max-width: 300px;
-                height: 100vh;
-            }
-            
-            .message {
-                max-width: 95%;
-                padding: 8px 10px;
-            }
-            
-            .chat-messages {
-                padding: 10px;
-            }
-            
-            .chat-header {
-                padding: 10px 12px;
-            }
-            
-            .chat-title {
-                font-size: 16px;
-            }
-            
-            .chat-subtitle {
-                font-size: 12px;
-            }
-            
-            .logo h1 {
-                display: block !important;
-                font-size: 16px;
-            }
-            
-            .header-content {
-                padding: 0 10px;
-            }
-            
-            .sidebar-header {
-                padding: 12px;
-            }
-            
-            .user-avatar-sidebar {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
-            }
-            
-            .user-name {
-                font-size: 14px;
-            }
-            
-            .logout-btn-sidebar {
-                padding: 6px 10px;
-                font-size: 12px;
-            }
-            
-            .chat-name {
-                font-size: 13px;
-            }
-            
-            .chat-last-message {
-                font-size: 12px;
-            }
-            
-            .no-chat-selected {
-                font-size: 14px;
-                padding: 15px;
-            }
-            
-            .no-chat-icon {
-                font-size: 40px;
-            }
-            
-            .admin-link-btn, .ai-toggle-btn {
-                padding: 4px 10px;
-                font-size: 10px;
-            }
-        }
-        
-        @media (min-width: 769px) {
-            .menu-toggle {
-                display: none;
-            }
-        }
-        
-        /* Overlay for mobile sidebar */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -792,145 +577,60 @@
             display: block;
         }
         
-        @media (max-width: 480px) {
+        .online-status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #2ecc71;
+            margin-left: 5px;
+            animation: pulse-green 2s infinite;
+        }
+        
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 0 0 5px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                height: 100vh;
+                top: 0;
+                left: 0;
+                transform: translateX(-100%);
+                width: 85%;
+                max-width: 320px;
+                z-index: 1000;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
             .message {
-                max-width: 98%;
-            }
-            
-            .chat-input {
-                font-size: 12px;
-                padding: 8px 10px;
-            }
-            
-            .send-btn, .image-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 14px;
-            }
-            
-            header {
-                padding: 10px 0;
+                max-width: 90%;
             }
             
             .logo h1 {
                 display: block !important;
-                font-size: 16px;
-            }
-            
-            .user-avatar {
-                width: 35px;
-                height: 35px;
-            }
-            
-            .icon-btn, .back-btn {
-                width: 35px;
-                height: 35px;
+                font-size: 18px;
             }
             
             .menu-toggle {
-                width: 36px;
-                height: 36px;
-                margin-right: 8px;
+                display: flex;
             }
         }
         
-        @media (max-width: 360px) {
-            .chat-input-container {
-                padding: 8px 10px;
-            }
-            
-            .chat-input {
-                padding: 6px 10px;
-                font-size: 11px;
-            }
-            
-            .send-btn, .image-btn {
-                width: 34px;
-                height: 34px;
-                font-size: 13px;
-            }
-            
-            .chat-messages {
-                padding: 8px;
-            }
-            
-            .message {
-                padding: 6px 10px;
-                margin-bottom: 8px;
-            }
-            
-            .message-text {
-                font-size: 12px;
-            }
-            
-            .chat-header {
-                padding: 8px 10px;
-            }
-            
-            .chat-title {
-                font-size: 15px;
-            }
-            
+        @media (min-width: 769px) {
             .menu-toggle {
-                width: 34px;
-                height: 34px;
-                font-size: 14px;
+                display: none;
             }
-            
-            .logo h1 {
-                display: block !important;
-                font-size: 15px;
-            }
-        }
-        
-        /* Scrollbar styling */
-        .chat-list::-webkit-scrollbar,
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .chat-list::-webkit-scrollbar-track,
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        .chat-list::-webkit-scrollbar-thumb,
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
-            border-radius: 10px;
-        }
-        
-        .chat-list::-webkit-scrollbar-thumb:hover,
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-        
-        /* Empty state for chat list */
-        .empty-chat-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--gray);
-        }
-        
-        .empty-chat-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-            color: #ddd;
-        }
-        
-        .empty-chat-text {
-            font-size: 14px;
-            line-height: 1.4;
         }
     </style>
 </head>
 <body>
-    <!-- Header always visible -->
     <header>
         <div class="header-content">
             <a href="index.html" class="logo">
@@ -951,35 +651,28 @@
         </div>
     </header>
     
-    <!-- Main content area -->
     <div class="main-container">
-        <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="user-info-sidebar">
-                    <div class="user-avatar-sidebar" id="userAvatar">
-                        <!-- Avatar will be populated by JS -->
-                    </div>
+                    <div class="user-avatar-sidebar" id="userAvatar"></div>
                     <div class="user-details">
                         <div class="user-name" id="userDisplayName"></div>
-                        <div class="user-status">Đang trực tuyến</div>
+                        <div class="user-status">Đang trực tuyến <span class="online-status"></span></div>
                     </div>
                 </div>
                 <button class="logout-btn-sidebar" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
             </div>
             <div class="chat-list" id="chatList">
-                <!-- Chat items will be populated here -->
-                <div class="empty-chat-list" id="emptyChatList">
-                    <i class="fas fa-comment-slash empty-chat-icon"></i>
-                    <div class="empty-chat-text">Bạn chưa có cuộc trò chuyện nào</div>
+                <div class="empty-chat-list" id="emptyChatList" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; color: var(--gray);">
+                    <i class="fas fa-comment-slash" style="font-size: 48px; margin-bottom: 15px; color: #ddd;"></i>
+                    <div style="font-size: 14px;">Bạn chưa có cuộc trò chuyện nào</div>
                 </div>
             </div>
         </div>
         
-        <!-- Overlay for mobile sidebar -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
         
-        <!-- Chat area -->
         <div class="chat-area">
             <div class="chat-header">
                 <button class="menu-toggle" id="menuToggle">
@@ -989,11 +682,9 @@
                     <div class="chat-title" id="currentChatName">Chọn một cuộc trò chuyện</div>
                     <div class="chat-subtitle" id="currentChatSubtitle">Để bắt đầu trò chuyện</div>
                 </div>
-                <!-- Nút: Chuyển tới MAP ADMIN -->
                 <button class="admin-link-btn" id="adminLinkBtn" style="display: none;">
                     <i class="fas fa-map-marker-alt"></i> Bản đồ
                 </button>
-                <!-- Nút bật/tắt AI -->
                 <button class="ai-toggle-btn" id="aiToggleBtn" style="display: none;">
                     <i class="fas fa-robot"></i> AI: <span id="aiStatus">Bật</span>
                 </button>
@@ -1044,12 +735,15 @@
         let currentUser = null;
         let currentChat = null;
         let chats = [];
-        let messageListeners = {};
+        let isUserAdmin = false;
         let selectedImage = null;
         let isAIToggling = false;
-        let processedMessageIds = new Set(); // Lưu ID các tin nhắn đã xử lý để tránh AI trả lời trùng
-        let initialMessagesLoaded = false; // Đánh dấu đã load tin nhắn lần đầu chưa
-        let isUserAdmin = false; // Biến kiểm tra user có phải admin không
+        
+        // POLLING INTERVALS
+        let chatsPollingInterval = null;
+        let messagesPollingInterval = null;
+        let lastChatsData = new Map(); // Lưu lastMessageTime của từng chat
+        let lastMessagesData = new Map(); // Lưu tin nhắn đã hiển thị
 
         // Check authentication
         auth.onAuthStateChanged((user) => {
@@ -1059,16 +753,15 @@
                 document.getElementById('userAvatar').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
                 document.getElementById('userAvatarHeader').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
                 
-                // Kiểm tra xem user có phải admin không
-                checkIfUserIsAdminUser();
-                loadChats();
+                checkIfUserIsAdmin();
+                startPollingChats(); // Bắt đầu polling chats
             } else {
                 window.location.href = 'login.html';
             }
         });
 
         // Kiểm tra user có phải admin không
-        function checkIfUserIsAdminUser() {
+        function checkIfUserIsAdmin() {
             db.collection('users').doc(currentUser.uid).get()
                 .then((doc) => {
                     if (doc.exists) {
@@ -1090,35 +783,109 @@
 
         // Logout buttons
         document.getElementById('logoutBtn').addEventListener('click', function() {
+            stopPolling();
             auth.signOut().then(() => {
                 window.location.href = 'login.html';
             });
         });
 
         document.getElementById('logoutBtnHeader').addEventListener('click', function() {
+            stopPolling();
             auth.signOut().then(() => {
                 window.location.href = 'login.html';
             });
         });
 
-        // Load user's chats
-        function loadChats() {
-            db.collection('chats')
-                .where('participants', 'array-contains', currentUser.uid)
-                .orderBy('lastMessageTime', 'desc')
-                .onSnapshot((querySnapshot) => {
-                    chats = [];
-                    querySnapshot.forEach((doc) => {
-                        chats.push({
-                            id: doc.id,
-                            ...doc.data()
-                        });
-                    });
-                    displayChats();
-                });
+        // START POLLING CHATS - mỗi 0.5 giây
+        function startPollingChats() {
+            if (chatsPollingInterval) clearInterval(chatsPollingInterval);
+            
+            // Load ngay lập tức
+            loadChats();
+            
+            // Sau đó polling mỗi 0.5s
+            chatsPollingInterval = setInterval(() => {
+                if (document.visibilityState === 'visible') {
+                    loadChats();
+                }
+            }, 500);
+        }
+        
+        // START POLLING MESSAGES - mỗi 0.5 giây cho chat đang mở
+        function startPollingMessages(chatId) {
+            if (messagesPollingInterval) clearInterval(messagesPollingInterval);
+            
+            // Load ngay lập tức
+            loadMessages(chatId);
+            
+            // Sau đó polling mỗi 0.5s
+            messagesPollingInterval = setInterval(() => {
+                if (document.visibilityState === 'visible' && currentChat && currentChat.id === chatId) {
+                    loadMessages(chatId);
+                }
+            }, 500);
+        }
+        
+        function stopPolling() {
+            if (chatsPollingInterval) clearInterval(chatsPollingInterval);
+            if (messagesPollingInterval) clearInterval(messagesPollingInterval);
         }
 
-        // Display chats in the sidebar
+        // Load user's chats
+        async function loadChats() {
+            try {
+                const querySnapshot = await db.collection('chats')
+                    .where('participants', 'array-contains', currentUser.uid)
+                    .get();
+                
+                const newChats = [];
+                querySnapshot.forEach((doc) => {
+                    newChats.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Sắp xếp theo lastMessageTime mới nhất
+                newChats.sort((a, b) => {
+                    const aTime = a.lastMessageTime?.toDate?.()?.getTime() || 0;
+                    const bTime = b.lastMessageTime?.toDate?.()?.getTime() || 0;
+                    return bTime - aTime;
+                });
+                
+                // Kiểm tra xem có chat mới hoặc tin nhắn mới không
+                const hasChanges = checkChatsChanges(newChats);
+                
+                if (hasChanges) {
+                    chats = newChats;
+                    displayChats();
+                }
+            } catch (error) {
+                console.error('Error loading chats:', error);
+            }
+        }
+        
+        // Kiểm tra thay đổi của chats
+        function checkChatsChanges(newChats) {
+            if (newChats.length !== chats.length) return true;
+            
+            for (let i = 0; i < newChats.length; i++) {
+                const newChat = newChats[i];
+                const oldChat = chats.find(c => c.id === newChat.id);
+                
+                if (!oldChat) return true;
+                
+                const newLastTime = newChat.lastMessageTime?.toDate?.()?.getTime() || 0;
+                const oldLastTime = oldChat.lastMessageTime?.toDate?.()?.getTime() || 0;
+                
+                if (newLastTime !== oldLastTime) return true;
+                if (newChat.lastMessage !== oldChat.lastMessage) return true;
+            }
+            
+            return false;
+        }
+
+        // Display chats in sidebar
         function displayChats() {
             const chatList = document.getElementById('chatList');
             const emptyChatList = document.getElementById('emptyChatList');
@@ -1133,6 +900,9 @@
             emptyChatList.style.display = 'none';
             chatList.innerHTML = '';
             
+            // Lấy danh sách tin nhắn đã đọc từ localStorage
+            const readMessages = JSON.parse(localStorage.getItem('readMessages') || '{}');
+            
             chats.forEach(chat => {
                 const chatItem = document.createElement('div');
                 chatItem.className = 'chat-item';
@@ -1140,6 +910,15 @@
                 
                 if (currentChat && currentChat.id === chat.id) {
                     chatItem.classList.add('active');
+                }
+                
+                // Kiểm tra tin nhắn chưa đọc
+                const lastMsgTime = chat.lastMessageTime?.toDate?.()?.getTime() || 0;
+                const lastReadTime = readMessages[chat.id] || 0;
+                const hasUnread = lastMsgTime > lastReadTime && (!currentChat || currentChat.id !== chat.id);
+                
+                if (hasUnread) {
+                    chatItem.classList.add('has-unread');
                 }
                 
                 const chatAvatar = document.createElement('div');
@@ -1170,7 +949,13 @@
                 chatItem.appendChild(chatAvatar);
                 chatItem.appendChild(chatInfo);
                 
-                // Add click event listener to select chat
+                if (hasUnread) {
+                    const unreadBadge = document.createElement('div');
+                    unreadBadge.className = 'unread-badge';
+                    unreadBadge.innerHTML = '<i class="fas fa-circle" style="font-size: 8px;"></i>';
+                    chatItem.appendChild(unreadBadge);
+                }
+                
                 chatItem.addEventListener('click', () => {
                     selectChat(chat);
                 });
@@ -1179,34 +964,33 @@
             });
         }
 
-        // Select a chat to view
+        // Select a chat
         function selectChat(chat) {
-            // Stop previous message listener if exists
-            if (currentChat && messageListeners[currentChat.id]) {
-                messageListeners[currentChat.id]();
+            // Dừng polling messages cũ
+            if (messagesPollingInterval) {
+                clearInterval(messagesPollingInterval);
+                messagesPollingInterval = null;
             }
             
             currentChat = chat;
-            initialMessagesLoaded = false;
-            processedMessageIds.clear(); // Reset processed messages khi chuyển chat
             
-            // Update URL with chatId for sharing/deep linking
+            // Đánh dấu đã đọc
+            const readMessages = JSON.parse(localStorage.getItem('readMessages') || '{}');
+            readMessages[chat.id] = Date.now();
+            localStorage.setItem('readMessages', JSON.stringify(readMessages));
+            
+            // Cập nhật URL
             const url = new URL(window.location);
             url.searchParams.set('chatId', chat.id);
             window.history.replaceState({}, '', url);
             
             document.getElementById('currentChatName').textContent = chat.name;
             document.getElementById('currentChatSubtitle').textContent = 'Đang trò chuyện với cộng tác viên';
-            
-            // Hiển thị nút chuyển đến MAP ADMIN
             document.getElementById('adminLinkBtn').style.display = 'flex';
-            
-            // Cập nhật đường link của nút
             document.getElementById('adminLinkBtn').onclick = function() {
                 window.location.href = `admin-map.html?id=${chat.id}`;
             };
-
-            // Hiển thị nút bật/tắt AI (chỉ cho cộng tác viên)
+            
             if (isUserAdmin) {
                 document.getElementById('aiToggleBtn').style.display = 'flex';
                 updateAIToggleButton(chat.aiEnabled !== false);
@@ -1214,36 +998,29 @@
                 document.getElementById('aiToggleBtn').style.display = 'none';
             }
             
-            // Fix: Check if elements exist before accessing their style
-            const noChatSelected = document.getElementById('noChatSelected');
-            const chatInput = document.getElementById('chatInput');
+            document.getElementById('noChatSelected').style.display = 'none';
+            document.getElementById('chatInput').style.display = 'flex';
             
-            if (noChatSelected) {
-                noChatSelected.style.display = 'none';
-            }
-            
-            if (chatInput) {
-                chatInput.style.display = 'flex';
-            }
-            
-            // Update active state in sidebar
-            const chatItems = document.querySelectorAll('.chat-item');
-            chatItems.forEach(item => {
+            // Update active state
+            document.querySelectorAll('.chat-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.chatId === chat.id) {
                     item.classList.add('active');
                 }
             });
             
-            loadMessages(chat.id);
+            // Refresh lại danh sách chats để bỏ unread badge
+            displayChats();
             
-            // Close sidebar on mobile after selection
+            // Bắt đầu polling messages cho chat này
+            startPollingMessages(chat.id);
+            
+            // Close sidebar on mobile
             if (window.innerWidth <= 768) {
                 closeSidebar();
             }
         }
-
-        // Cập nhật giao diện nút AI
+        
         function updateAIToggleButton(isEnabled) {
             const aiToggleBtn = document.getElementById('aiToggleBtn');
             const aiStatus = document.getElementById('aiStatus');
@@ -1256,8 +1033,7 @@
                 aiStatus.textContent = 'Tắt';
             }
         }
-
-        // Xử lý sự kiện bật/tắt AI
+        
         document.getElementById('aiToggleBtn').addEventListener('click', function() {
             if (!currentChat || isAIToggling) return;
             
@@ -1265,7 +1041,6 @@
             const currentStatus = currentChat.aiEnabled !== false;
             const newStatus = !currentStatus;
             
-            // Cập nhật trong Firestore
             db.collection('chats').doc(currentChat.id).update({
                 aiEnabled: newStatus
             })
@@ -1275,177 +1050,97 @@
             })
             .catch((error) => {
                 console.error('Error toggling AI:', error);
-                alert('Không thể thay đổi trạng thái AI. Vui lòng thử lại.');
+                alert('Không thể thay đổi trạng thái AI.');
             })
             .finally(() => {
                 isAIToggling = false;
             });
         });
 
-        // Hàm cuộn xuống dưới cùng
-        function scrollToBottom(smooth = true) {
-            const chatMessages = document.getElementById('chatMessages');
-            if (!chatMessages) return;
+        // Load messages for a chat
+        async function loadMessages(chatId) {
+            if (!chatId) return;
             
-            requestAnimationFrame(() => {
-                const scrollHeight = chatMessages.scrollHeight;
-                const height = chatMessages.clientHeight;
-                const maxScroll = scrollHeight - height;
+            try {
+                const querySnapshot = await db.collection('chats')
+                    .doc(chatId)
+                    .collection('messages')
+                    .orderBy('timestamp', 'asc')
+                    .get();
                 
-                if (smooth && maxScroll > 0) {
-                    chatMessages.scrollTo({
-                        top: maxScroll,
-                        behavior: 'smooth'
+                const messages = [];
+                querySnapshot.forEach((doc) => {
+                    messages.push({
+                        id: doc.id,
+                        ...doc.data()
                     });
-                } else {
-                    chatMessages.scrollTop = maxScroll;
+                });
+                
+                // Kiểm tra và cập nhật UI nếu có tin nhắn mới
+                updateMessagesUI(chatId, messages);
+                
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+        
+        // Cập nhật UI tin nhắn
+        function updateMessagesUI(chatId, newMessages) {
+            const chatMessages = document.getElementById('chatMessages');
+            const currentMessageIds = new Set();
+            
+            // Lấy các message div hiện tại
+            const existingDivs = chatMessages.querySelectorAll('[data-message-id]');
+            existingDivs.forEach(div => {
+                currentMessageIds.add(div.getAttribute('data-message-id'));
+            });
+            
+            let hasNewMessage = false;
+            let lastMessage = null;
+            
+            // Thêm tin nhắn mới
+            newMessages.forEach(message => {
+                if (!currentMessageIds.has(message.id)) {
+                    displayMessage(message);
+                    hasNewMessage = true;
+                    lastMessage = message;
                 }
             });
-        }
-
-        // Load messages for a chat - CHỈ LOAD LẦN ĐẦU, SAU ĐÓ CHỈ THÊM MỚI
-        function loadMessages(chatId) {
-            const chatMessages = document.getElementById('chatMessages');
             
-            // Stop previous message listener if exists
-            if (messageListeners[chatId]) {
-                messageListeners[chatId]();
+            // Nếu có tin nhắn mới, cập nhật lastMessage trong chat và scroll
+            if (hasNewMessage && lastMessage) {
+                // Cập nhật lastMessage trong chat object
+                const chatIndex = chats.findIndex(c => c.id === chatId);
+                if (chatIndex !== -1) {
+                    chats[chatIndex].lastMessage = lastMessage.text || (lastMessage.image ? 'Đã gửi một hình ảnh' : '');
+                    chats[chatIndex].lastMessageTime = lastMessage.timestamp;
+                    displayChats(); // Refresh danh sách chats
+                }
+                
+                // Scroll to bottom
+                scrollToBottom();
+                
+                // Xử lý AI response (chỉ cho user thường)
+                if (!isUserAdmin && lastMessage && lastMessage.senderId === currentUser.uid && 
+                    !lastMessage.isAI && lastMessage.senderId !== 'ai' && lastMessage.senderId !== 'system') {
+                    
+                    const chat = chats.find(c => c.id === chatId);
+                    if (chat && chat.aiEnabled !== false) {
+                        generateAIResponse(chatId, newMessages, lastMessage);
+                    }
+                }
             }
-            
-            // Xóa hết tin nhắn cũ khi load chat mới
-            chatMessages.innerHTML = '';
-            
-            // Load lịch sử tin nhắn (chỉ load 50 tin nhắn gần nhất để tối ưu)
-            db.collection('chats')
-                .doc(chatId)
-                .collection('messages')
-                .orderBy('timestamp', 'desc')
-                .limit(50)
-                .get()
-                .then((querySnapshot) => {
-                    const messages = [];
-                    querySnapshot.forEach((doc) => {
-                        messages.unshift({
-                            id: doc.id,
-                            ...doc.data()
-                        });
-                    });
-                    
-                    // Hiển thị tin nhắn lịch sử
-                    messages.forEach(message => {
-                        displayMessage(message);
-                    });
-                    
-                    initialMessagesLoaded = true;
-                    
-                    // Scroll to bottom sau khi load lịch sử
-                    scrollToBottom(false);
-                    
-                    // Bắt đầu lắng nghe tin nhắn mới
-                    listenForNewMessages(chatId);
-                })
-                .catch((error) => {
-                    console.error('Error loading messages:', error);
-                });
         }
-
-        // Lắng nghe tin nhắn mới - CHỈ THÊM KHÔNG LOẠI BỎ
-        function listenForNewMessages(chatId) {
-            messageListeners[chatId] = db.collection('chats')
-                .doc(chatId)
-                .collection('messages')
-                .orderBy('timestamp', 'asc')
-                .onSnapshot((querySnapshot) => {
-                    // Nếu chưa load lịch sử xong thì bỏ qua
-                    if (!initialMessagesLoaded) return;
-                    
-                    // Xử lý từng tin nhắn mới
-                    querySnapshot.docChanges().forEach((change) => {
-                        if (change.type === 'added') {
-                            const message = {
-                                id: change.doc.id,
-                                ...change.doc.data()
-                            };
-                            
-                            // Kiểm tra xem tin nhắn đã tồn tại chưa
-                            const existingMessage = document.querySelector(`[data-message-id="${message.id}"]`);
-                            if (existingMessage) return;
-                            
-                            // Hiển thị tin nhắn mới
-                            displayMessage(message);
-                            
-                            // Cuộn xuống dưới cùng nếu là tin nhắn mới
-                            const chatMessages = document.getElementById('chatMessages');
-                            const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 100;
-                            
-                            if (isAtBottom) {
-                                scrollToBottom(true);
-                            }
-                            
-                            // XỬ LÝ AI PHẢN HỒI - CHỈ CHO USER, KHÔNG CHO ADMIN
-                            // Kiểm tra nếu:
-                            // 1. Tin nhắn không phải của AI
-                            // 2. Tin nhắn không phải của hệ thống
-                            // 3. Tin nhắn là của người dùng (không phải admin)
-                            // 4. Người gửi không phải admin
-                            // 5. AI được bật
-                            
-                            const isMessageFromUser = message.senderId === currentUser.uid;
-                            const isMessageFromAdmin = message.senderId !== currentUser.uid && 
-                                                      message.senderId !== 'ai' && 
-                                                      message.senderId !== 'system';
-                            
-                            // AI CHỈ PHẢN HỒI KHI:
-                            // - Tin nhắn từ người dùng (currentUser)
-                            // - Và người dùng hiện tại KHÔNG phải admin
-                            // - Và tin nhắn chưa được xử lý
-                            if (!isUserAdmin && 
-                                isMessageFromUser && 
-                                !message.isAI && 
-                                message.senderId !== 'ai' && 
-                                message.senderId !== 'system' &&
-                                !processedMessageIds.has(message.id)) {
-                                
-                                // Đánh giá xem AI có được bật không
-                                db.collection('chats').doc(chatId).get()
-                                    .then((chatDoc) => {
-                                        const chatData = chatDoc.data();
-                                        if (chatData.aiEnabled !== false) {
-                                            processedMessageIds.add(message.id);
-                                            
-                                            // Lấy lịch sử tin nhắn để tạo ngữ cảnh
-                                            return db.collection('chats')
-                                                .doc(chatId)
-                                                .collection('messages')
-                                                .orderBy('timestamp', 'asc')
-                                                .get();
-                                        }
-                                    })
-                                    .then((messagesSnapshot) => {
-                                        if (messagesSnapshot) {
-                                            const messages = [];
-                                            messagesSnapshot.forEach((doc) => {
-                                                messages.push({
-                                                    id: doc.id,
-                                                    ...doc.data()
-                                                });
-                                            });
-                                            generateAIResponse(chatId, messages, message);
-                                        }
-                                    })
-                                    .catch((error) => {
-                                        console.error('Error checking AI status:', error);
-                                    });
-                            }
-                        }
-                    });
-                });
+        
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 100);
         }
-
-        // Hàm loại bỏ markdown khỏi văn bản
+        
         function removeMarkdown(text) {
             if (!text) return text;
-            
             return text
                 .replace(/\*\*(.*?)\*\*/g, '$1')
                 .replace(/\*(.*?)\*/g, '$1')
@@ -1453,22 +1148,14 @@
                 .replace(/~~(.*?)~~/g, '$1')
                 .replace(/`(.*?)`/g, '$1')
                 .replace(/^#+\s+/gm, '')
-                .replace(/^---+$/gm, '')
-                .replace(/^\*+---+$/gm, '')
                 .replace(/^>\s+/gm, '')
-                .replace(/^[\s]*[-*+]\s+/gm, '')
-                .replace(/^\s*\d+\.\s+/gm, '')
                 .replace(/\[(.*?)\]\(.*?\)/g, '$1')
-                .replace(/!\[(.*?)\]\(.*?\)/g, '$1')
                 .replace(/[*_~`#>\-+]/g, '')
-                .replace(/\n\s*\n\s*\n/g, '\n\n')
                 .trim();
         }
-
-        // Gọi Gemini API để tạo phản hồi
+        
         async function generateAIResponse(chatId, messages, userMessage) {
             try {
-                // Lấy lịch sử chat (tối đa 10 tin nhắn gần nhất)
                 const chatHistory = messages.slice(-10).map(msg => {
                     let sender = '';
                     if (msg.senderId === currentUser.uid) {
@@ -1482,52 +1169,33 @@
                     }
                     return `${sender}: ${msg.text || ''}`;
                 }).join('\n');
-
-                // Tạo prompt cho AI
+                
                 const prompt = `Bạn là trợ lý AI của FriendlyGuard, một ứng dụng an toàn học đường. 
 Nhiệm vụ của bạn là hỗ trợ học sinh trong các tình huống khẩn cấp hoặc báo cáo sự việc.
 Hãy trả lời một cách đồng cảm, chuyên nghiệp và cung cấp thông tin hữu ích.
-Nếu là tình huống khẩn cấp, hãy hướng dẫn các bước an toàn và khuyến khích đợi cộng tác viên.
-
-QUAN TRỌNG: KHÔNG sử dụng bất kỳ ký hiệu markdown nào như *, **, #, -, >, v.v. trong câu trả lời. Chỉ sử dụng văn bản thuần túy.
+QUAN TRỌNG: KHÔNG sử dụng bất kỳ ký hiệu markdown nào như *, **, #, -, >.
 
 Lịch sử trò chuyện:
 ${chatHistory}
 
 Tin nhắn mới nhất từ người dùng: ${userMessage.text || ''}
 
-Hãy trả lời tin nhắn của người dùng một cách phù hợp (chỉ sử dụng văn bản thuần túy, không markdown):`;
-
-                // Gọi Gemini API
+Hãy trả lời tin nhắn của người dùng:`;
+                
                 const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: prompt
-                            }]
-                        }],
-                        generationConfig: {
-                            temperature: 0.7,
-                            maxOutputTokens: 500,
-                        }
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
                     })
                 });
-
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                let aiResponse = data.candidates[0].content.parts[0].text;
                 
-                // Loại bỏ markdown khỏi phản hồi của AI
-                aiResponse = removeMarkdown(aiResponse);
-
-                // Lưu phản hồi của AI vào Firestore
+                if (!response.ok) throw new Error(`API error: ${response.status}`);
+                
+                const data = await response.json();
+                let aiResponse = removeMarkdown(data.candidates[0].content.parts[0].text);
+                
                 await db.collection('chats').doc(chatId).collection('messages').add({
                     text: aiResponse,
                     senderId: 'ai',
@@ -1536,18 +1204,15 @@ Hãy trả lời tin nhắn của người dùng một cách phù hợp (chỉ s
                     isAI: true,
                     inResponseTo: userMessage.id
                 });
-
-                // Cập nhật last message của chat
+                
                 await db.collection('chats').doc(chatId).update({
                     lastMessage: aiResponse,
                     lastMessageTime: firebase.firestore.FieldValue.serverTimestamp()
                 });
-
+                
             } catch (error) {
                 console.error('Error generating AI response:', error);
-                
-                // Fallback response nếu API lỗi
-                const fallbackResponse = "Xin lỗi, tôi không thể xử lý yêu cầu của bạn lúc này. Vui lòng đợi cộng tác viên hỗ trợ hoặc thử lại sau.";
+                const fallbackResponse = "Xin lỗi, tôi không thể xử lý yêu cầu của bạn lúc này. Vui lòng đợi cộng tác viên hỗ trợ.";
                 
                 await db.collection('chats').doc(chatId).collection('messages').add({
                     text: fallbackResponse,
@@ -1559,20 +1224,15 @@ Hãy trả lời tin nhắn của người dùng một cách phù hợp (chỉ s
                 });
             }
         }
-
-        // Display a message in the chat
+        
         function displayMessage(message) {
             const chatMessages = document.getElementById('chatMessages');
             
-            // Kiểm tra tin nhắn đã tồn tại chưa
-            if (document.querySelector(`[data-message-id="${message.id}"]`)) {
-                return;
-            }
+            if (document.querySelector(`[data-message-id="${message.id}"]`)) return;
             
             const messageDiv = document.createElement('div');
             messageDiv.setAttribute('data-message-id', message.id);
             
-            // Xác định loại tin nhắn
             if (message.senderId === currentUser.uid) {
                 messageDiv.className = 'message sent';
             } else if (message.senderId === 'ai' || message.isAI) {
@@ -1581,40 +1241,31 @@ Hãy trả lời tin nhắn của người dùng một cách phù hợp (chỉ s
                 messageDiv.className = 'message received';
             }
             
-            // Hiển thị tên người gửi (nếu không phải user hiện tại và không phải system)
             if (message.senderId !== currentUser.uid && message.senderId !== 'system') {
                 const senderName = document.createElement('div');
                 senderName.className = 'message-sender';
-                
                 if (message.senderId === 'ai' || message.isAI) {
                     senderName.innerHTML = '<i class="fas fa-robot"></i> ' + (message.senderName || 'AI Trợ lý');
                 } else {
                     senderName.textContent = message.senderName || 'Cộng tác viên';
                 }
-                
                 messageDiv.appendChild(senderName);
             }
             
-            // Thêm nội dung tin nhắn
             const messageText = document.createElement('div');
             messageText.className = 'message-text';
-            
-            // Loại bỏ markdown nếu là tin nhắn AI
             if (message.senderId === 'ai' || message.isAI) {
                 messageText.textContent = removeMarkdown(message.text);
             } else {
                 messageText.textContent = message.text;
             }
-            
             messageDiv.appendChild(messageText);
             
-            // Display image if exists
             if (message.image) {
                 const messageImage = document.createElement('img');
                 messageImage.className = 'message-image';
                 messageImage.src = message.image;
                 messageImage.alt = 'Hình ảnh tin nhắn';
-                messageImage.loading = 'lazy'; // Lazy load cho ảnh
                 messageDiv.appendChild(messageImage);
             }
             
@@ -1625,11 +1276,9 @@ Hãy trả lời tin nhắn của người dùng một cách phù hợp (chỉ s
             
             chatMessages.appendChild(messageDiv);
         }
-
-        // Format timestamp to readable time
+        
         function formatTime(timestamp) {
             if (!timestamp) return '';
-            
             const date = timestamp.toDate();
             const now = new Date();
             const diff = now.getTime() - date.getTime();
@@ -1640,75 +1289,60 @@ Hãy trả lời tin nhắn của người dùng một cách phù hợp (chỉ s
                 return date.toLocaleDateString('vi-VN');
             }
         }
-
-        // Send a message
+        
+        // Send message
         document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+            if (e.key === 'Enter') sendMessage();
         });
-
-        // Send image
+        
         document.getElementById('imageBtn').addEventListener('click', function() {
             document.getElementById('imageInput').click();
         });
-
+        
         document.getElementById('imageInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 compressImage(file, 720, 0.7, function(compressedImage) {
-                    selectedImage = compressedImage;
                     sendMessage(compressedImage);
                 });
             }
         });
-
-        function sendMessage(image = null) {
+        
+        async function sendMessage(image = null) {
             const messageInput = document.getElementById('messageInput');
             const messageText = messageInput.value.trim();
             
             if ((!messageText && !image) || !currentChat) return;
             
-            // Prepare message data
             const messageData = {
                 senderId: currentUser.uid,
                 senderName: currentUser.displayName || currentUser.email,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
             
-            if (messageText) {
-                messageData.text = messageText;
-            }
+            if (messageText) messageData.text = messageText;
+            if (image) messageData.image = image;
             
-            if (image) {
-                messageData.image = image;
-            }
-            
-            // Add message to Firestore
-            db.collection('chats').doc(currentChat.id).collection('messages').add(messageData)
-            .then(() => {
-                // Update last message in chat
+            try {
+                await db.collection('chats').doc(currentChat.id).collection('messages').add(messageData);
+                
                 const lastMessage = messageText || (image ? 'Đã gửi một hình ảnh' : '');
-                db.collection('chats').doc(currentChat.id).update({
+                await db.collection('chats').doc(currentChat.id).update({
                     lastMessage: lastMessage,
                     lastMessageTime: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
                 messageInput.value = '';
-                selectedImage = null;
                 document.getElementById('imageInput').value = '';
-                
-                // Focus back to input
                 messageInput.focus();
-            })
-            .catch((error) => {
+                
+            } catch (error) {
                 console.error('Error sending message:', error);
-                alert('Có lỗi khi gửi tin nhắn. Vui lòng thử lại.');
-            });
+                alert('Có lỗi khi gửi tin nhắn.');
+            }
         }
-
-        // Image compression function
+        
         function compressImage(file, maxWidth, quality, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -1718,7 +1352,6 @@ Hãy trả lời tin nhắn của người dùng một cách phù hợp (chỉ s
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    
                     let width = img.width;
                     let height = img.height;
                     
@@ -1729,84 +1362,63 @@ Hãy trả lời tin nhắn của người dùng một cách phù hợp (chỉ s
                     
                     canvas.width = width;
                     canvas.height = height;
-                    
                     ctx.drawImage(img, 0, 0, width, height);
-                    
-                    const compressedImage = canvas.toDataURL('image/jpeg', quality);
-                    callback(compressedImage);
+                    callback(canvas.toDataURL('image/jpeg', quality));
                 }
             }
         }
-
-        // Toggle sidebar for mobile
+        
+        // Sidebar controls
         document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
         document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
-
+        
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            
             sidebar.classList.toggle('open');
             overlay.classList.toggle('active');
         }
-
+        
         function closeSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         }
-
-        // Handle window resize
+        
         window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                closeSidebar();
-            }
+            if (window.innerWidth > 768) closeSidebar();
         });
-
-        // Clean up on page unload
+        
         window.addEventListener('beforeunload', function() {
-            Object.values(messageListeners).forEach(unsubscribe => {
-                if (unsubscribe) unsubscribe();
-            });
+            stopPolling();
         });
-
-        // Handle initial chat selection from URL or localStorage
+        
+        // Initial load from URL
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const chatIdFromUrl = urlParams.get('chatId');
             const chatIdFromStorage = localStorage.getItem('selectedChatId');
-            
             let targetChatId = chatIdFromUrl || chatIdFromStorage;
             
             if (targetChatId) {
                 const checkChatInterval = setInterval(() => {
                     if (chats.length > 0) {
                         clearInterval(checkChatInterval);
-                        
                         const targetChat = chats.find(c => c.id === targetChatId);
                         if (targetChat) {
                             selectChat(targetChat);
-                            
                             localStorage.removeItem('selectedChatId');
                             localStorage.removeItem('selectedChatName');
-                            
                             if (chatIdFromUrl) {
                                 window.history.replaceState({}, document.title, window.location.pathname);
                             }
                         }
                     }
                 }, 100);
-                
-                setTimeout(() => {
-                    clearInterval(checkChatInterval);
-                }, 5000);
+                setTimeout(() => clearInterval(checkChatInterval), 5000);
             }
         });
     </script>
 </body>
-
 </html>
-
-
