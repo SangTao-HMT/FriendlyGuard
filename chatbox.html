@@ -39,7 +39,6 @@
             overflow: hidden;
         }
         
-        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -139,11 +138,6 @@
             font-size: 16px;
         }
         
-        .back-btn:hover {
-            background-color: rgba(255,255,255,0.3);
-        }
-        
-        /* Main content area */
         .main-container {
             display: flex;
             flex: 1;
@@ -320,6 +314,22 @@
             color: var(--gray);
         }
         
+        .empty-chat-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        .empty-chat-list i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
         .chat-area {
             flex: 1;
             display: flex;
@@ -377,11 +387,6 @@
             text-decoration: none;
             white-space: nowrap;
             flex-shrink: 0;
-        }
-        
-        .admin-link-btn:hover {
-            background: linear-gradient(to right, #7b2cbf, #5a189a);
-            transform: translateY(-1px);
         }
         
         .ai-toggle-btn {
@@ -558,10 +563,6 @@
             flex-shrink: 0;
         }
         
-        .menu-toggle:hover {
-            background: var(--secondary);
-        }
-        
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -663,12 +664,7 @@
                 </div>
                 <button class="logout-btn-sidebar" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
             </div>
-            <div class="chat-list" id="chatList">
-                <div class="empty-chat-list" id="emptyChatList" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; color: var(--gray);">
-                    <i class="fas fa-comment-slash" style="font-size: 48px; margin-bottom: 15px; color: #ddd;"></i>
-                    <div style="font-size: 14px;">Bạn chưa có cuộc trò chuyện nào</div>
-                </div>
-            </div>
+            <div class="chat-list" id="chatList"></div>
         </div>
         
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -742,8 +738,6 @@
         // POLLING INTERVALS
         let chatsPollingInterval = null;
         let messagesPollingInterval = null;
-        let lastChatsData = new Map(); // Lưu lastMessageTime của từng chat
-        let lastMessagesData = new Map(); // Lưu tin nhắn đã hiển thị
 
         // Check authentication
         auth.onAuthStateChanged((user) => {
@@ -754,13 +748,12 @@
                 document.getElementById('userAvatarHeader').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
                 
                 checkIfUserIsAdmin();
-                startPollingChats(); // Bắt đầu polling chats
+                startPollingChats();
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        // Kiểm tra user có phải admin không
         function checkIfUserIsAdmin() {
             db.collection('users').doc(currentUser.uid).get()
                 .then((doc) => {
@@ -776,12 +769,10 @@
                 });
         }
 
-        // Back button
         document.getElementById('backBtn').addEventListener('click', function() {
             window.location.href = 'index.html';
         });
 
-        // Logout buttons
         document.getElementById('logoutBtn').addEventListener('click', function() {
             stopPolling();
             auth.signOut().then(() => {
@@ -796,14 +787,9 @@
             });
         });
 
-        // START POLLING CHATS - mỗi 0.5 giây
         function startPollingChats() {
             if (chatsPollingInterval) clearInterval(chatsPollingInterval);
-            
-            // Load ngay lập tức
             loadChats();
-            
-            // Sau đó polling mỗi 0.5s
             chatsPollingInterval = setInterval(() => {
                 if (document.visibilityState === 'visible') {
                     loadChats();
@@ -811,14 +797,9 @@
             }, 500);
         }
         
-        // START POLLING MESSAGES - mỗi 0.5 giây cho chat đang mở
         function startPollingMessages(chatId) {
             if (messagesPollingInterval) clearInterval(messagesPollingInterval);
-            
-            // Load ngay lập tức
             loadMessages(chatId);
-            
-            // Sau đó polling mỗi 0.5s
             messagesPollingInterval = setInterval(() => {
                 if (document.visibilityState === 'visible' && currentChat && currentChat.id === chatId) {
                     loadMessages(chatId);
@@ -831,7 +812,6 @@
             if (messagesPollingInterval) clearInterval(messagesPollingInterval);
         }
 
-        // Load user's chats
         async function loadChats() {
             try {
                 const querySnapshot = await db.collection('chats')
@@ -846,14 +826,12 @@
                     });
                 });
                 
-                // Sắp xếp theo lastMessageTime mới nhất
                 newChats.sort((a, b) => {
                     const aTime = a.lastMessageTime?.toDate?.()?.getTime() || 0;
                     const bTime = b.lastMessageTime?.toDate?.()?.getTime() || 0;
                     return bTime - aTime;
                 });
                 
-                // Kiểm tra xem có chat mới hoặc tin nhắn mới không
                 const hasChanges = checkChatsChanges(newChats);
                 
                 if (hasChanges) {
@@ -865,7 +843,6 @@
             }
         }
         
-        // Kiểm tra thay đổi của chats
         function checkChatsChanges(newChats) {
             if (newChats.length !== chats.length) return true;
             
@@ -885,22 +862,22 @@
             return false;
         }
 
-        // Display chats in sidebar
         function displayChats() {
             const chatList = document.getElementById('chatList');
-            const emptyChatList = document.getElementById('emptyChatList');
+            if (!chatList) return;
             
             if (chats.length === 0) {
-                emptyChatList.style.display = 'flex';
-                chatList.innerHTML = '';
-                chatList.appendChild(emptyChatList);
+                chatList.innerHTML = `
+                    <div class="empty-chat-list">
+                        <i class="fas fa-comment-slash"></i>
+                        <div>Bạn chưa có cuộc trò chuyện nào</div>
+                    </div>
+                `;
                 return;
             }
             
-            emptyChatList.style.display = 'none';
             chatList.innerHTML = '';
             
-            // Lấy danh sách tin nhắn đã đọc từ localStorage
             const readMessages = JSON.parse(localStorage.getItem('readMessages') || '{}');
             
             chats.forEach(chat => {
@@ -912,7 +889,6 @@
                     chatItem.classList.add('active');
                 }
                 
-                // Kiểm tra tin nhắn chưa đọc
                 const lastMsgTime = chat.lastMessageTime?.toDate?.()?.getTime() || 0;
                 const lastReadTime = readMessages[chat.id] || 0;
                 const hasUnread = lastMsgTime > lastReadTime && (!currentChat || currentChat.id !== chat.id);
@@ -964,9 +940,7 @@
             });
         }
 
-        // Select a chat
         function selectChat(chat) {
-            // Dừng polling messages cũ
             if (messagesPollingInterval) {
                 clearInterval(messagesPollingInterval);
                 messagesPollingInterval = null;
@@ -974,12 +948,10 @@
             
             currentChat = chat;
             
-            // Đánh dấu đã đọc
             const readMessages = JSON.parse(localStorage.getItem('readMessages') || '{}');
             readMessages[chat.id] = Date.now();
             localStorage.setItem('readMessages', JSON.stringify(readMessages));
             
-            // Cập nhật URL
             const url = new URL(window.location);
             url.searchParams.set('chatId', chat.id);
             window.history.replaceState({}, '', url);
@@ -1001,7 +973,6 @@
             document.getElementById('noChatSelected').style.display = 'none';
             document.getElementById('chatInput').style.display = 'flex';
             
-            // Update active state
             document.querySelectorAll('.chat-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.chatId === chat.id) {
@@ -1009,13 +980,9 @@
                 }
             });
             
-            // Refresh lại danh sách chats để bỏ unread badge
             displayChats();
-            
-            // Bắt đầu polling messages cho chat này
             startPollingMessages(chat.id);
             
-            // Close sidebar on mobile
             if (window.innerWidth <= 768) {
                 closeSidebar();
             }
@@ -1057,7 +1024,6 @@
             });
         });
 
-        // Load messages for a chat
         async function loadMessages(chatId) {
             if (!chatId) return;
             
@@ -1076,7 +1042,6 @@
                     });
                 });
                 
-                // Kiểm tra và cập nhật UI nếu có tin nhắn mới
                 updateMessagesUI(chatId, messages);
                 
             } catch (error) {
@@ -1084,12 +1049,11 @@
             }
         }
         
-        // Cập nhật UI tin nhắn
         function updateMessagesUI(chatId, newMessages) {
             const chatMessages = document.getElementById('chatMessages');
-            const currentMessageIds = new Set();
+            if (!chatMessages) return;
             
-            // Lấy các message div hiện tại
+            const currentMessageIds = new Set();
             const existingDivs = chatMessages.querySelectorAll('[data-message-id]');
             existingDivs.forEach(div => {
                 currentMessageIds.add(div.getAttribute('data-message-id'));
@@ -1098,7 +1062,6 @@
             let hasNewMessage = false;
             let lastMessage = null;
             
-            // Thêm tin nhắn mới
             newMessages.forEach(message => {
                 if (!currentMessageIds.has(message.id)) {
                     displayMessage(message);
@@ -1107,20 +1070,16 @@
                 }
             });
             
-            // Nếu có tin nhắn mới, cập nhật lastMessage trong chat và scroll
             if (hasNewMessage && lastMessage) {
-                // Cập nhật lastMessage trong chat object
                 const chatIndex = chats.findIndex(c => c.id === chatId);
                 if (chatIndex !== -1) {
                     chats[chatIndex].lastMessage = lastMessage.text || (lastMessage.image ? 'Đã gửi một hình ảnh' : '');
                     chats[chatIndex].lastMessageTime = lastMessage.timestamp;
-                    displayChats(); // Refresh danh sách chats
+                    displayChats();
                 }
                 
-                // Scroll to bottom
                 scrollToBottom();
                 
-                // Xử lý AI response (chỉ cho user thường)
                 if (!isUserAdmin && lastMessage && lastMessage.senderId === currentUser.uid && 
                     !lastMessage.isAI && lastMessage.senderId !== 'ai' && lastMessage.senderId !== 'system') {
                     
@@ -1135,7 +1094,9 @@
         function scrollToBottom() {
             const chatMessages = document.getElementById('chatMessages');
             setTimeout(() => {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                if (chatMessages) {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
             }, 100);
         }
         
@@ -1173,7 +1134,7 @@
                 const prompt = `Bạn là trợ lý AI của FriendlyGuard, một ứng dụng an toàn học đường. 
 Nhiệm vụ của bạn là hỗ trợ học sinh trong các tình huống khẩn cấp hoặc báo cáo sự việc.
 Hãy trả lời một cách đồng cảm, chuyên nghiệp và cung cấp thông tin hữu ích.
-QUAN TRỌNG: KHÔNG sử dụng bất kỳ ký hiệu markdown nào như *, **, #, -, >.
+QUAN TRỌNG: KHÔNG sử dụng bất kỳ ký hiệu markdown nào.
 
 Lịch sử trò chuyện:
 ${chatHistory}
@@ -1227,6 +1188,7 @@ Hãy trả lời tin nhắn của người dùng:`;
         
         function displayMessage(message) {
             const chatMessages = document.getElementById('chatMessages');
+            if (!chatMessages) return;
             
             if (document.querySelector(`[data-message-id="${message.id}"]`)) return;
             
@@ -1290,7 +1252,6 @@ Hãy trả lời tin nhắn của người dùng:`;
             }
         }
         
-        // Send message
         document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') sendMessage();
@@ -1368,22 +1329,21 @@ Hãy trả lời tin nhắn của người dùng:`;
             }
         }
         
-        // Sidebar controls
         document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
         document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
         
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
+            if (sidebar) sidebar.classList.toggle('open');
+            if (overlay) overlay.classList.toggle('active');
         }
         
         function closeSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
         }
         
         window.addEventListener('resize', function() {
@@ -1394,7 +1354,6 @@ Hãy trả lời tin nhắn của người dùng:`;
             stopPolling();
         });
         
-        // Initial load from URL
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const chatIdFromUrl = urlParams.get('chatId');
