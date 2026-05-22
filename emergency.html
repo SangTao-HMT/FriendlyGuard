@@ -41,7 +41,6 @@
             padding: 0 15px;
         }
         
-        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -140,12 +139,10 @@
             background-color: rgba(255,255,255,0.3);
         }
         
-        /* Main Content */
         .main-content {
             margin: 20px 0;
         }
         
-        /* Content Area */
         .content-area {
             background-color: white;
             border-radius: 12px;
@@ -195,17 +192,6 @@
             color: var(--danger);
             font-size: 13px;
             word-break: break-all;
-        }
-        
-        .loading {
-            text-align: center;
-            color: var(--gray);
-            padding: 20px;
-        }
-        
-        .loading i {
-            font-size: 40px;
-            margin-bottom: 15px;
         }
         
         .emergency-types {
@@ -264,7 +250,6 @@
             flex-grow: 1;
         }
         
-        /* Safety Guide Modal */
         .modal {
             display: none;
             position: fixed;
@@ -404,180 +389,31 @@
         }
         
         @media (max-width: 768px) {
-            .emergency-header h2 {
-                font-size: 22px;
-            }
-            
-            .emergency-header p {
-                font-size: 14px;
-            }
-            
-            .emergency-types {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            
-            .emergency-type {
-                padding: 15px;
-                min-height: 180px;
-            }
-            
-            .modal-actions {
-                flex-direction: column;
-            }
-            
-            .container {
-                padding: 0 12px;
-            }
-            
-            .content-area {
-                padding: 15px;
-            }
-            
-            .modal-content {
-                padding: 15px;
-            }
-            
-            .logo h1 {
-                display: none;
-            }
-            
-            .logo i {
-                font-size: 22px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .emergency-header h2 {
-                font-size: 20px;
-                gap: 8px;
-            }
-            
-            .emergency-header h2 i {
-                font-size: 20px;
-            }
-            
-            .emergency-icon {
-                width: 55px;
-                height: 55px;
-                font-size: 22px;
-            }
-            
-            .emergency-type h3 {
-                font-size: 15px;
-            }
-            
-            .emergency-type p {
-                font-size: 12px;
-            }
-            
-            .location-info {
-                padding: 12px;
-            }
-            
-            .location-info p {
-                font-size: 13px;
-            }
-            
-            .location-data {
-                font-size: 12px;
-            }
-            
-            .modal-header h2 {
-                font-size: 18px;
-            }
-            
-            .modal-btn {
-                padding: 10px;
-                font-size: 13px;
-            }
-            
-            .step-content h4 {
-                font-size: 14px;
-            }
-            
-            .step-content p {
-                font-size: 12px;
-            }
+            .emergency-header h2 { font-size: 22px; }
+            .emergency-header p { font-size: 14px; }
+            .emergency-types { grid-template-columns: 1fr; gap: 12px; }
+            .emergency-type { padding: 15px; min-height: 180px; }
+            .modal-actions { flex-direction: column; }
+            .container { padding: 0 12px; }
+            .content-area { padding: 15px; }
+            .modal-content { padding: 15px; }
+            .logo h1 { display: none; }
+            .logo i { font-size: 22px; }
         }
         
         @media (min-width: 577px) {
-            .logo h1 {
-                display: block;
-            }
+            .logo h1 { display: block; }
         }
         
-        @media (max-width: 480px) {
-            .emergency-header h2 {
-                font-size: 18px;
-            }
-            
-            .emergency-header p {
-                font-size: 13px;
-            }
-            
-            .emergency-type {
-                min-height: 170px;
-            }
-            
-            .modal-content {
-                max-height: 90vh;
-            }
-            
-            .modal-header h2 {
-                font-size: 17px;
-            }
-            
-            .user-avatar {
-                width: 35px;
-                height: 35px;
-                font-size: 13px;
-            }
-            
-            .icon-btn, .back-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 15px;
-            }
-        }
-        
-        @media (max-width: 360px) {
-            .container {
-                padding: 0 10px;
-            }
-            
-            .content-area {
-                padding: 12px;
-            }
-            
-            .emergency-header h2 {
-                font-size: 17px;
-            }
-            
-            .emergency-type {
-                padding: 12px;
-                min-height: 160px;
-            }
-            
-            .emergency-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-            }
-            
-            .modal-content {
-                padding: 12px;
-            }
-            
-            .modal-header h2 {
-                font-size: 16px;
-            }
-        }
-        
-        @media (min-width: 769px) and (max-width: 992px) {
-            .emergency-types {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        @media (max-width: 576px) {
+            .emergency-header h2 { font-size: 20px; }
+            .emergency-icon { width: 55px; height: 55px; font-size: 22px; }
+            .emergency-type h3 { font-size: 15px; }
+            .location-info { padding: 12px; }
+            .modal-header h2 { font-size: 18px; }
+            .modal-btn { padding: 10px; font-size: 13px; }
+            .user-avatar { width: 35px; height: 35px; font-size: 13px; }
+            .icon-btn, .back-btn { width: 35px; height: 35px; font-size: 15px; }
         }
     </style>
 </head>
@@ -618,49 +454,32 @@
 
                 <div class="emergency-types">
                     <div class="emergency-type" data-type="Bạo lực học đường">
-                        <div class="emergency-icon">
-                            <i class="fas fa-fist-raised"></i>
-                        </div>
+                        <div class="emergency-icon"><i class="fas fa-fist-raised"></i></div>
                         <h3>Bạo Lực Học Đường</h3>
                         <p>Bị đánh đập, bắt nạt, đe dọa hoặc các hình thức bạo lực khác</p>
                     </div>
-
                     <div class="emergency-type" data-type="Xâm hại tình dục">
-                        <div class="emergency-icon">
-                            <i class="fas fa-ban"></i>
-                        </div>
+                        <div class="emergency-icon"><i class="fas fa-ban"></i></div>
                         <h3>Xâm Hại Tình Dục</h3>
                         <p>Quấy rối, xâm hại hoặc có nguy cơ bị xâm hại tình dục</p>
                     </div>
-
                     <div class="emergency-type" data-type="Ma túy học đường">
-                        <div class="emergency-icon">
-                            <i class="fas fa-syringe"></i>
-                        </div>
+                        <div class="emergency-icon"><i class="fas fa-syringe"></i></div>
                         <h3>Ma Túy Học Đường</h3>
                         <p>Phát hiện hoặc bị ép buộc sử dụng chất cấm, ma túy</p>
                     </div>
-
                     <div class="emergency-type" data-type="Bắt cóc, bắt giữ">
-                        <div class="emergency-icon">
-                            <i class="fas fa-handcuffs"></i>
-                        </div>
+                        <div class="emergency-icon"><i class="fas fa-handcuffs"></i></div>
                         <h3>Bắt Cóc, Bắt Giữ</h3>
                         <p>Bị bắt cóc, giam giữ trái phép hoặc mất tích</p>
                     </div>
-
                     <div class="emergency-type" data-type="Tự tử, tự hủy hoại">
-                        <div class="emergency-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
+                        <div class="emergency-icon"><i class="fas fa-heartbeat"></i></div>
                         <h3>Tự Tử, Tự Hủy Hoại</h3>
                         <p>Bản thân hoặc người khác có ý định tự tử, tự hủy hoại</p>
                     </div>
-
                     <div class="emergency-type" data-type="Khẩn cấp khác">
-                        <div class="emergency-icon">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
+                        <div class="emergency-icon"><i class="fas fa-exclamation-circle"></i></div>
                         <h3>Khẩn Cấp Khác</h3>
                         <p>Tình huống nguy hiểm khác cần hỗ trợ khẩn cấp</p>
                     </div>
@@ -669,74 +488,31 @@
         </div>
     </div>
 
-    <!-- Safety Guide Modal -->
     <div class="modal" id="safetyModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-life-ring"></i> Hướng Dẫn An Toàn</h2>
                 <button class="close-modal" id="closeModal">&times;</button>
             </div>
-            
             <div class="safety-steps">
-                <div class="safety-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Tìm nơi an toàn</h4>
-                        <p>Nếu có thể, hãy di chuyển đến nơi an toàn, đông người hoặc có sự giúp đỡ.</p>
-                    </div>
-                </div>
-                
-                <div class="safety-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Giữ bình tĩnh</h4>
-                        <p>Hít thở sâu và cố gắng giữ bình tĩnh. Cộng tác viên đang trên đường hỗ trợ bạn.</p>
-                    </div>
-                </div>
-                
-                <div class="safety-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Không đối đầu</h4>
-                        <p>Tránh đối đầu trực tiếp với người gây nguy hiểm. Ưu tiên an toàn của bản thân.</p>
-                    </div>
-                </div>
-                
-                <div class="safety-step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Liên lạc với người thân</h4>
-                        <p>Nếu có thể, hãy thông báo cho người thân, bạn bè hoặc giáo viên về tình huống.</p>
-                    </div>
-                </div>
-                
-                <div class="safety-step">
-                    <div class="step-number">5</div>
-                    <div class="step-content">
-                        <h4>Chuẩn bị thông tin</h4>
-                        <p>Chuẩn bị mô tả về địa điểm, số lượng người và tình trạng hiện tại để cung cấp cho cộng tác viên.</p>
-                    </div>
-                </div>
+                <div class="safety-step"><div class="step-number">1</div><div class="step-content"><h4>Tìm nơi an toàn</h4><p>Nếu có thể, hãy di chuyển đến nơi an toàn, đông người hoặc có sự giúp đỡ.</p></div></div>
+                <div class="safety-step"><div class="step-number">2</div><div class="step-content"><h4>Giữ bình tĩnh</h4><p>Hít thở sâu và cố gắng giữ bình tĩnh. Cộng tác viên đang trên đường hỗ trợ bạn.</p></div></div>
+                <div class="safety-step"><div class="step-number">3</div><div class="step-content"><h4>Không đối đầu</h4><p>Tránh đối đầu trực tiếp với người gây nguy hiểm. Ưu tiên an toàn của bản thân.</p></div></div>
+                <div class="safety-step"><div class="step-number">4</div><div class="step-content"><h4>Liên lạc với người thân</h4><p>Nếu có thể, hãy thông báo cho người thân, bạn bè hoặc giáo viên về tình huống.</p></div></div>
+                <div class="safety-step"><div class="step-number">5</div><div class="step-content"><h4>Chuẩn bị thông tin</h4><p>Chuẩn bị mô tả về địa điểm, số lượng người và tình trạng hiện tại để cung cấp cho cộng tác viên.</p></div></div>
             </div>
-            
             <div class="modal-actions">
-                <button class="modal-btn cancel-btn" id="cancelEmergency">
-                    <i class="fas fa-times"></i> Hủy Bỏ
-                </button>
-                <button class="modal-btn continue-btn" id="continueToChat">
-                    <i class="fas fa-comments"></i> Tiếp Tục Trò Chuyện
-                </button>
+                <button class="modal-btn cancel-btn" id="cancelEmergency"><i class="fas fa-times"></i> Hủy Bỏ</button>
+                <button class="modal-btn continue-btn" id="continueToChat"><i class="fas fa-comments"></i> Tiếp Tục Trò Chuyện</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
     <script>
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCq67Pm6oXQqC4hzShZyMW3XXuFdzuYeog",
             authDomain: "blhd-ce0b8.firebaseapp.com",
@@ -747,7 +523,6 @@
             measurementId: "G-K7JLBH42RN"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -757,34 +532,66 @@
         let selectedEmergencyType = null;
         let adminUserId = null;
 
-        // Check authentication
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('userAvatar').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
                 getCurrentLocation();
-                findOrCreateAdminUser();
+                await findOrCreateAdminUser();
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        // Back button
+        async function findOrCreateAdminUser() {
+            return new Promise((resolve) => {
+                db.collection('users')
+                    .where('email', '==', 'admin@admin.com')
+                    .get()
+                    .then((querySnapshot) => {
+                        if (!querySnapshot.empty) {
+                            querySnapshot.forEach((doc) => {
+                                adminUserId = doc.id;
+                                console.log('Found admin user:', adminUserId);
+                                resolve(adminUserId);
+                            });
+                        } else {
+                            const adminUserRef = db.collection('users').doc();
+                            adminUserId = adminUserRef.id;
+                            adminUserRef.set({
+                                displayName: 'Cộng Tác Viên FriendlyGuard',
+                                email: 'admin@admin.com',
+                                role: 'admin',
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                isAdmin: true
+                            }).then(() => {
+                                console.log('Created admin user:', adminUserId);
+                                resolve(adminUserId);
+                            }).catch((error) => {
+                                console.error('Error creating admin user:', error);
+                                resolve(null);
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error finding admin user:', error);
+                        resolve(null);
+                    });
+            });
+        }
+
         document.getElementById('backBtn').addEventListener('click', function() {
             window.location.href = 'index.html';
         });
 
-        // Logout button
         document.getElementById('logoutBtn').addEventListener('click', function() {
             auth.signOut().then(() => {
                 window.location.href = 'login.html';
             });
         });
 
-        // Get current location with high accuracy
         function getCurrentLocation() {
             const locationInfo = document.getElementById('locationInfo');
-            
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
@@ -793,69 +600,21 @@
                             longitude: position.coords.longitude,
                             accuracy: position.coords.accuracy
                         };
-                        
                         locationInfo.innerHTML = `
                             <p><i class="fas fa-map-marker-alt"></i> Vị trí của bạn đã được xác định</p>
                             <p class="location-data">Tọa độ: ${currentLocation.latitude.toFixed(6)}, ${currentLocation.longitude.toFixed(6)}</p>
                         `;
                     },
                     function(error) {
-                        locationInfo.innerHTML = `
-                            <p><i class="fas fa-exclamation-triangle"></i> Không thể xác định vị trí tự động</p>
-                            <p>Vui lòng bật định vị và thử lại</p>
-                        `;
+                        locationInfo.innerHTML = `<p><i class="fas fa-exclamation-triangle"></i> Không thể xác định vị trí tự động</p><p>Vui lòng bật định vị và thử lại</p>`;
                     },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 60000
-                    }
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
                 );
             } else {
-                locationInfo.innerHTML = `
-                    <p><i class="fas fa-exclamation-triangle"></i> Trình duyệt không hỗ trợ định vị</p>
-                `;
+                locationInfo.innerHTML = `<p><i class="fas fa-exclamation-triangle"></i> Trình duyệt không hỗ trợ định vị</p>`;
             }
         }
 
-        // Find or create admin user
-        function findOrCreateAdminUser() {
-            // First, try to find admin user by email
-            db.collection('users')
-                .where('email', '==', 'admin@admin.com')
-                .get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        // Admin user exists
-                        querySnapshot.forEach((doc) => {
-                            adminUserId = doc.id;
-                            console.log('Found admin user:', adminUserId);
-                        });
-                    } else {
-                        // Create admin user in Firestore
-                        console.log('Creating admin user in Firestore...');
-                        const adminUserRef = db.collection('users').doc();
-                        adminUserId = adminUserRef.id;
-                        
-                        adminUserRef.set({
-                            displayName: 'Cộng Tác Viên FriendlyGuard',
-                            email: 'admin@admin.com',
-                            role: 'admin',
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            isAdmin: true
-                        }).then(() => {
-                            console.log('Admin user created in Firestore:', adminUserId);
-                        }).catch((error) => {
-                            console.error('Error creating admin user:', error);
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error finding admin user:', error);
-                });
-        }
-
-        // Emergency type selection
         document.querySelectorAll('.emergency-type').forEach(type => {
             type.addEventListener('click', function() {
                 selectedEmergencyType = this.getAttribute('data-type');
@@ -863,7 +622,6 @@
             });
         });
 
-        // Modal handlers
         document.getElementById('closeModal').addEventListener('click', function() {
             document.getElementById('safetyModal').style.display = 'none';
         });
@@ -873,30 +631,32 @@
             selectedEmergencyType = null;
         });
 
-        document.getElementById('continueToChat').addEventListener('click', function() {
+        document.getElementById('continueToChat').addEventListener('click', async function() {
             if (selectedEmergencyType && currentLocation) {
-                createEmergencyChat();
+                await createEmergencyChat();
             } else {
                 alert('Vui lòng chờ hệ thống xác định vị trí của bạn.');
             }
         });
 
-        // Create emergency chat with admin
-        function createEmergencyChat() {
+        async function createEmergencyChat() {
             if (!adminUserId) {
-                alert('Hệ thống đang tải, vui lòng thử lại sau.');
+                await findOrCreateAdminUser();
+            }
+            if (!adminUserId) {
+                alert('Không thể kết nối đến cộng tác viên. Vui lòng thử lại sau.');
                 return;
             }
 
             const chatId = 'KC-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
             const chatName = `KC-${selectedEmergencyType}-${chatId.substr(3, 8)}`;
             
-            console.log('Creating emergency chat between:', currentUser.uid, 'and', adminUserId);
+            const adminUserDoc = await db.collection('users').doc(adminUserId).get();
+            const adminData = adminUserDoc.exists ? adminUserDoc.data() : { displayName: 'Cộng Tác Viên FriendlyGuard', email: 'admin@admin.com' };
             
-            // Create chat document - ONLY between current user and admin
-            db.collection('chats').doc(chatId).set({
+            await db.collection('chats').doc(chatId).set({
                 name: chatName,
-                participants: [currentUser.uid, adminUserId], // ONLY 2 participants
+                participants: [currentUser.uid, adminUserId],
                 createdBy: currentUser.uid,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 lastMessage: `Báo cáo khẩn cấp: ${selectedEmergencyType}`,
@@ -911,55 +671,44 @@
                 },
                 participantNames: {
                     [currentUser.uid]: currentUser.displayName || currentUser.email,
-                    [adminUserId]: 'Cộng Tác Viên FriendlyGuard'
+                    [adminUserId]: adminData.displayName || 'Cộng Tác Viên FriendlyGuard'
                 },
                 participantInfo: {
                     [currentUser.uid]: {
                         displayName: currentUser.displayName || currentUser.email,
                         email: currentUser.email,
-                        role: 'user'
+                        role: 'user',
+                        uid: currentUser.uid
                     },
                     [adminUserId]: {
-                        displayName: 'Cộng Tác Viên FriendlyGuard',
+                        displayName: adminData.displayName || 'Cộng Tác Viên FriendlyGuard',
                         email: 'admin@admin.com',
-                        role: 'admin'
+                        role: 'admin',
+                        uid: adminUserId
                     }
                 }
-            })
-            .then(() => {
-                console.log('Emergency chat created successfully:', chatId);
-                
-                // Add initial emergency message
-                return db.collection('chats').doc(chatId).collection('messages').add({
-                    text: `🚨 BÁO CÁO KHẨN CẤP\n\nLoại: ${selectedEmergencyType}\nVị trí: ${currentLocation.latitude.toFixed(6)}, ${currentLocation.longitude.toFixed(6)}\nThời gian: ${new Date().toLocaleString('vi-VN')}\n\nHệ thống đã kết nối bạn với cộng tác viên. Vui lòng mô tả chi tiết tình huống.`,
-                    senderId: 'system',
-                    senderName: 'Hệ thống FriendlyGuard',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    isSystem: true
-                });
-            })
-            .then(() => {
-                // Add welcome message from admin
-                return db.collection('chats').doc(chatId).collection('messages').add({
-                    text: `Xin chào! Tôi là cộng tác viên FriendlyGuard. Tôi đã nhận được báo cáo khẩn cấp của bạn về "${selectedEmergencyType}". Hãy cho tôi biết chi tiết về tình huống bạn đang gặp phải. Chúng tôi sẽ hỗ trợ bạn ngay lập tức!`,
-                    senderId: adminUserId,
-                    senderName: 'Cộng Tác Viên FriendlyGuard',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            })
-            .then(() => {
-                // Close modal and redirect to chat
-                document.getElementById('safetyModal').style.display = 'none';
-                alert('Đã tạo cuộc trò chuyện khẩn cấp với cộng tác viên!');
-                window.location.href = `chatbox.html`;
-            })
-            .catch((error) => {
-                console.error('Error creating emergency chat:', error);
-                alert('Có lỗi xảy ra khi tạo cuộc trò chuyện. Vui lòng thử lại.');
             });
+            
+            await db.collection('chats').doc(chatId).collection('messages').add({
+                text: `🚨 BÁO CÁO KHẨN CẤP\n\nLoại: ${selectedEmergencyType}\nVị trí: ${currentLocation.latitude.toFixed(6)}, ${currentLocation.longitude.toFixed(6)}\nThời gian: ${new Date().toLocaleString('vi-VN')}\n\nHệ thống đã kết nối bạn với cộng tác viên. Vui lòng mô tả chi tiết tình huống.`,
+                senderId: 'system',
+                senderName: 'Hệ thống FriendlyGuard',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                isSystem: true
+            });
+            
+            await db.collection('chats').doc(chatId).collection('messages').add({
+                text: `Xin chào! Tôi là cộng tác viên FriendlyGuard. Tôi đã nhận được báo cáo khẩn cấp của bạn về "${selectedEmergencyType}". Hãy cho tôi biết chi tiết về tình huống bạn đang gặp phải. Chúng tôi sẽ hỗ trợ bạn ngay lập tức!`,
+                senderId: adminUserId,
+                senderName: adminData.displayName || 'Cộng Tác Viên FriendlyGuard',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            document.getElementById('safetyModal').style.display = 'none';
+            alert('Đã tạo cuộc trò chuyện khẩn cấp với cộng tác viên!');
+            window.location.href = `chatbox.html?chatId=${chatId}`;
         }
 
-        // Close modal when clicking outside
         window.addEventListener('click', function(event) {
             const modal = document.getElementById('safetyModal');
             if (event.target === modal) {
