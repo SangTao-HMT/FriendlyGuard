@@ -42,7 +42,6 @@
             padding: 0 15px;
         }
         
-        /* Header - CẢI THIỆN Z-INDEX */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -144,13 +143,11 @@
             background-color: rgba(255,255,255,0.3);
         }
         
-        /* Main Content */
         .main-content {
             margin: 20px 0;
             padding-top: 64px;
         }
         
-        /* Content Area */
         .content-area {
             background-color: white;
             border-radius: 12px;
@@ -164,11 +161,10 @@
             margin-bottom: 20px;
         }
         
-        /* Đổi màu tiêu đề thành xanh */
         .report-header h2 {
             font-size: 24px;
             margin-bottom: 8px;
-            color: #2a6e3f; /* Màu xanh lá đậm */
+            color: #2a6e3f;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -377,7 +373,6 @@
             background: var(--gray-light);
         }
         
-        /* Success Popup */
         .success-popup {
             display: none;
             position: fixed;
@@ -480,193 +475,32 @@
         }
         
         @media (max-width: 768px) {
-            .report-header h2 {
-                font-size: 22px;
-            }
-            
-            .report-header p {
-                font-size: 14px;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .map-container {
-                height: 250px;
-            }
-            
-            .container {
-                padding: 0 12px;
-            }
-            
-            .content-area {
-                padding: 15px;
-            }
-            
-            .logo h1 {
-                display: none;
-            }
-            
-            .logo i {
-                font-size: 22px;
-            }
-            
-            .submit-btn, .reset-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .popup-content {
-                padding: 20px;
-                max-width: 90%;
-            }
-            
-            .popup-header h2 {
-                font-size: 20px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .report-header h2 {
-                font-size: 20px;
-                gap: 8px;
-            }
-            
-            .report-header h2 i {
-                font-size: 20px;
-            }
-            
-            .form-section h3 {
-                font-size: 16px;
-            }
-            
-            .form-section h3 i {
-                font-size: 16px;
-            }
-            
-            select, textarea, input {
-                font-size: 14px;
-                padding: 8px 10px;
-            }
-            
-            .map-container {
-                height: 200px;
-            }
-            
-            .map-controls {
-                top: 8px;
-                right: 8px;
-            }
-            
-            .map-control-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 14px;
-            }
-            
-            .image-upload {
-                padding: 15px;
-            }
-            
-            .image-upload i {
-                font-size: 35px;
-            }
-            
-            .popup-header h2 {
-                font-size: 18px;
-            }
-            
-            .popup-icon {
-                font-size: 40px;
-            }
-            
-            .user-avatar {
-                width: 35px;
-                height: 35px;
-                font-size: 13px;
-            }
-            
-            .icon-btn, .back-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 15px;
-            }
+            .report-header h2 { font-size: 22px; }
+            .report-header p { font-size: 14px; }
+            .form-actions { flex-direction: column; }
+            .map-container { height: 250px; }
+            .container { padding: 0 12px; }
+            .content-area { padding: 15px; }
+            .logo h1 { display: none; }
+            .logo i { font-size: 22px; }
+            .submit-btn, .reset-btn { width: 100%; justify-content: center; }
+            .popup-content { padding: 20px; max-width: 90%; }
+            .popup-header h2 { font-size: 20px; }
         }
         
         @media (min-width: 577px) {
-            .logo h1 {
-                display: block;
-            }
+            .logo h1 { display: block; }
         }
         
-        @media (max-width: 480px) {
-            .report-header h2 {
-                font-size: 18px;
-            }
-            
-            .report-header p {
-                font-size: 13px;
-            }
-            
-            .popup-content {
-                max-width: 95%;
-            }
-            
-            .popup-header h2 {
-                font-size: 17px;
-            }
-            
-            .image-preview img {
-                max-width: 120px;
-                max-height: 120px;
-            }
-            
-            .popup-actions {
-                flex-direction: column;
-            }
-            
-            .popup-btn {
-                width: 100%;
-            }
-        }
-        
-        @media (max-width: 360px) {
-            .container {
-                padding: 0 10px;
-            }
-            
-            .content-area {
-                padding: 12px;
-            }
-            
-            .report-header h2 {
-                font-size: 17px;
-            }
-            
-            .map-container {
-                height: 180px;
-            }
-            
-            .image-upload {
-                padding: 12px;
-            }
-            
-            .image-upload i {
-                font-size: 30px;
-            }
-            
-            .popup-content {
-                padding: 15px;
-            }
-            
-            .popup-header h2 {
-                font-size: 16px;
-            }
-            
-            .popup-icon {
-                font-size: 36px;
-            }
+        @media (max-width: 576px) {
+            .report-header h2 { font-size: 20px; }
+            .form-section h3 { font-size: 16px; }
+            select, textarea, input { font-size: 14px; padding: 8px 10px; }
+            .map-container { height: 200px; }
+            .popup-header h2 { font-size: 18px; }
+            .popup-icon { font-size: 40px; }
+            .user-avatar { width: 35px; height: 35px; font-size: 13px; }
+            .icon-btn, .back-btn { width: 35px; height: 35px; font-size: 15px; }
         }
     </style>
 </head>
@@ -697,7 +531,6 @@
         <div class="main-content">
             <div class="content-area">
                 <div class="report-header">
-                    <!-- Đổi màu tiêu đề thành xanh -->
                     <h2><i class="fas fa-flag" style="color: #2a6e3f;"></i> Báo Cáo Sự Việc</h2>
                     <p>Báo cáo các vấn đề vi phạm, tệ nạn học đường với đầy đủ thông tin</p>
                 </div>
@@ -738,7 +571,6 @@
                         <div class="form-group">
                             <label>Chọn vị trí trên bản đồ:</label>
                             <div class="map-container" id="map">
-                                <!-- Thêm nút điều khiển map -->
                                 <div class="map-controls">
                                     <button type="button" class="map-control-btn" id="locateUserBtn" title="Vị trí hiện tại của bạn">
                                         <i class="fas fa-location-crosshairs"></i>
@@ -750,7 +582,6 @@
                                 <p><small><i class="fas fa-info-circle"></i> Nếu không chọn vị trí, hệ thống sẽ tự động sử dụng vị trí hiện tại của bạn</small></p>
                                 <button type="button" class="remove-image" id="changeLocation">Thay đổi vị trí</button>
                             </div>
-                            <p class="location-help"><i class="fas fa-info-circle"></i> Nhấp vào bản đồ để chọn vị trí chính xác nơi xảy ra sự việc</p>
                         </div>
                     </div>
 
@@ -782,7 +613,6 @@
         </div>
     </div>
 
-    <!-- Success Popup -->
     <div class="success-popup" id="successPopup">
         <div class="popup-content">
             <div class="popup-header">
@@ -807,14 +637,12 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script>
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCq67Pm6oXQqC4hzShZyMW3XXuFdzuYeog",
             authDomain: "blhd-ce0b8.firebaseapp.com",
@@ -825,7 +653,6 @@
             measurementId: "G-K7JLBH42RN"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -840,75 +667,76 @@
         let isSubmitting = false;
         let currentReportChatId = null;
 
-        // Check authentication
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('userAvatar').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
-                findOrCreateAdminUser();
+                await findOrCreateAdminUser();
                 initMap();
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        // Back button
+        async function findOrCreateAdminUser() {
+            return new Promise((resolve) => {
+                db.collection('users')
+                    .where('email', '==', 'admin@admin.com')
+                    .get()
+                    .then((querySnapshot) => {
+                        if (!querySnapshot.empty) {
+                            querySnapshot.forEach((doc) => {
+                                adminUserId = doc.id;
+                                console.log('Found admin user:', adminUserId);
+                                resolve(adminUserId);
+                            });
+                        } else {
+                            const adminUserRef = db.collection('users').doc();
+                            adminUserId = adminUserRef.id;
+                            adminUserRef.set({
+                                displayName: 'Cộng Tác Viên FriendlyGuard',
+                                email: 'admin@admin.com',
+                                role: 'admin',
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                isAdmin: true
+                            }).then(() => {
+                                console.log('Created admin user:', adminUserId);
+                                resolve(adminUserId);
+                            }).catch((error) => {
+                                console.error('Error creating admin user:', error);
+                                resolve(null);
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error finding admin user:', error);
+                        resolve(null);
+                    });
+            });
+        }
+
         document.getElementById('backBtn').addEventListener('click', function() {
             window.location.href = 'index.html';
         });
 
-        // Logout button
         document.getElementById('logoutBtn').addEventListener('click', function() {
             auth.signOut().then(() => {
                 window.location.href = 'login.html';
             });
         });
 
-        // Find or create admin user
-        function findOrCreateAdminUser() {
-            db.collection('users')
-                .where('email', '==', 'admin@admin.com')
-                .get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        querySnapshot.forEach((doc) => {
-                            adminUserId = doc.id;
-                        });
-                    } else {
-                        const adminUserRef = db.collection('users').doc();
-                        adminUserId = adminUserRef.id;
-                        adminUserRef.set({
-                            displayName: 'Cộng Tác Viên FriendlyGuard',
-                            email: 'admin@admin.com',
-                            role: 'admin',
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            isAdmin: true
-                        });
-                    }
-                });
-        }
-
-        // Initialize map
         function initMap() {
             map = L.map('map').setView([10.8231, 106.6297], 13);
-
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
             }).addTo(map);
-
-            // Hiển thị vị trí người dùng khi bản đồ khởi tạo
             locateUser();
-
-            // Add click event to map
             map.on('click', function(e) {
                 setSelectedLocation(e.latlng.lat, e.latlng.lng);
             });
-
-            // Hiển thị thông báo vị trí
             document.getElementById('locationConfirm').style.display = 'block';
         }
 
-        // Locate user function
         function locateUser() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -917,80 +745,53 @@
                             lat: position.coords.latitude,
                             lng: position.coords.longitude
                         };
-                        
-                        // Đặt vị trí hiện tại làm vị trí mặc định nếu chưa chọn
                         if (!selectedLocation) {
                             setSelectedLocation(userLocation.lat, userLocation.lng);
                         }
-                        
-                        // Di chuyển bản đồ đến vị trí người dùng
                         map.setView([userLocation.lat, userLocation.lng], 15);
-                        
-                        // Xóa marker cũ nếu có
                         if (userLocationMarker) {
                             map.removeLayer(userLocationMarker);
                         }
-                        
-                        // Thêm marker vị trí hiện tại
                         userLocationMarker = L.marker([userLocation.lat, userLocation.lng], {
                             icon: L.divIcon({
                                 className: 'user-location-marker',
                                 html: '<div style="background-color: #28a745; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.3);"></div>',
                                 iconSize: [16, 16]
                             })
-                        })
-                        .addTo(map)
-                        .bindPopup('Vị trí hiện tại của bạn')
-                        .openPopup();
+                        }).addTo(map).bindPopup('Vị trí hiện tại của bạn').openPopup();
                     },
                     function(error) {
                         console.log('Could not get current location:', error);
-                        // Nếu không lấy được vị trí, sử dụng vị trí mặc định
                         if (!selectedLocation) {
                             setSelectedLocation(10.8231, 106.6297);
                         }
                     },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 60000
-                    }
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
                 );
             } else {
-                // Nếu trình duyệt không hỗ trợ geolocation
                 if (!selectedLocation) {
                     setSelectedLocation(10.8231, 106.6297);
                 }
             }
         }
 
-        // Set selected location
         function setSelectedLocation(lat, lng) {
             if (selectedMarker) {
                 map.removeLayer(selectedMarker);
             }
-
-            selectedLocation = {
-                lat: lat,
-                lng: lng
-            };
-
+            selectedLocation = { lat: lat, lng: lng };
             selectedMarker = L.marker([selectedLocation.lat, selectedLocation.lng])
                 .addTo(map)
                 .bindPopup('Vị trí đã chọn')
                 .openPopup();
-
-            // Update location confirmation text
             document.getElementById('selectedLocation').textContent = 
                 `${selectedLocation.lat.toFixed(6)}, ${selectedLocation.lng.toFixed(6)}`;
         }
 
-        // Locate user button
         document.getElementById('locateUserBtn').addEventListener('click', function() {
             locateUser();
         });
 
-        // Change location handler
         document.getElementById('changeLocation').addEventListener('click', function() {
             if (selectedMarker) {
                 map.removeLayer(selectedMarker);
@@ -999,7 +800,6 @@
             }
         });
 
-        // Image upload handling
         document.getElementById('imageUpload').addEventListener('click', function() {
             document.getElementById('imageInput').click();
         });
@@ -1010,21 +810,16 @@
                 alert('Chỉ có thể tải lên tối đa 5 ảnh');
                 return;
             }
-
             for (let file of files) {
                 if (file.type.startsWith('image/')) {
                     compressImage(file, 720, 0.7, function(compressedImage) {
-                        uploadedImages.push({
-                            file: file,
-                            compressed: compressedImage
-                        });
+                        uploadedImages.push({ file: file, compressed: compressedImage });
                         displayImagePreview(compressedImage, file.name);
                     });
                 }
             }
         });
 
-        // Image compression function
         function compressImage(file, maxWidth, quality, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -1034,43 +829,33 @@
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    
                     let width = img.width;
                     let height = img.height;
-                    
                     if (width > maxWidth) {
                         height = (height * maxWidth) / width;
                         width = maxWidth;
                     }
-                    
                     canvas.width = width;
                     canvas.height = height;
-                    
                     ctx.drawImage(img, 0, 0, width, height);
-                    
-                    const compressedImage = canvas.toDataURL('image/jpeg', quality);
-                    callback(compressedImage);
+                    callback(canvas.toDataURL('image/jpeg', quality));
                 }
             }
         }
 
-        // Display image preview
         function displayImagePreview(imageData, fileName) {
             const preview = document.getElementById('imagePreview');
             preview.style.display = 'block';
-
             const imageContainer = document.createElement('div');
             imageContainer.style.display = 'inline-block';
             imageContainer.style.marginRight = '8px';
             imageContainer.style.marginBottom = '8px';
             imageContainer.style.position = 'relative';
-
             const img = document.createElement('img');
             img.src = imageData;
             img.alt = fileName;
             img.style.maxWidth = '120px';
             img.style.maxHeight = '120px';
-
             const removeBtn = document.createElement('button');
             removeBtn.className = 'remove-image';
             removeBtn.innerHTML = '<i class="fas fa-times"></i>';
@@ -1084,48 +869,41 @@
                     preview.style.display = 'none';
                 }
             };
-
             imageContainer.appendChild(img);
             imageContainer.appendChild(removeBtn);
             preview.appendChild(imageContainer);
         }
 
-        // Form submission - GỬI NGAY LẬP TỨC KHÔNG QUA MODAL AN TOÀN
         document.getElementById('reportForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
             if (isSubmitting) {
                 alert('Đang xử lý báo cáo, vui lòng đợi...');
                 return;
             }
-
             const violationType = document.getElementById('violationType').value;
             const description = document.getElementById('incidentDescription').value;
-
-            // Kiểm tra dữ liệu bắt buộc
             if (!violationType || !description.trim()) {
                 alert('Vui lòng điền đầy đủ thông tin bắt buộc');
                 return;
             }
-
-            // Nếu không chọn vị trí, tự động lấy vị trí hiện tại
             if (!selectedLocation && userLocationMarker) {
                 const userLoc = userLocationMarker.getLatLng();
                 setSelectedLocation(userLoc.lat, userLoc.lng);
             } else if (!selectedLocation) {
-                // Nếu không có vị trí người dùng, lấy vị trí mặc định từ bản đồ
                 const mapCenter = map.getCenter();
                 setSelectedLocation(mapCenter.lat, mapCenter.lng);
             }
-
-            // Vô hiệu hóa nút submit để tránh click nhiều lần
             isSubmitting = true;
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
-
             try {
-                // Gửi báo cáo ngay lập tức
+                if (!adminUserId) {
+                    await findOrCreateAdminUser();
+                }
+                if (!adminUserId) {
+                    throw new Error('Không tìm thấy cộng tác viên');
+                }
                 const result = await createReportImmediately({
                     violationType: violationType,
                     description: description.trim(),
@@ -1134,31 +912,26 @@
                     images: uploadedImages.map(img => img.compressed),
                     timestamp: new Date()
                 });
-
-                // Hiển thị popup thành công
                 showSuccessPopup(result.chatId, result.reportCode);
-                
             } catch (error) {
                 console.error('Error creating report:', error);
-                alert('Có lỗi xảy ra khi gửi báo cáo. Vui lòng thử lại.');
+                alert('Có lỗi xảy ra khi gửi báo cáo: ' + error.message);
                 resetSubmitButton();
             }
         });
 
-        // Tạo báo cáo ngay lập tức
         async function createReportImmediately(reportData) {
             if (!adminUserId) {
                 throw new Error('Chưa tìm thấy cộng tác viên');
             }
-
-            // Tạo ID cho báo cáo
             const chatId = 'BC-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
             const reportCode = chatId.substr(3, 8);
-            
-            // Tạo tên chat
             const chatName = `BC-${reportData.violationType}-${reportCode}`;
             
-            // Create chat document
+            // Lấy thông tin admin user
+            const adminUserDoc = await db.collection('users').doc(adminUserId).get();
+            const adminData = adminUserDoc.exists ? adminUserDoc.data() : { displayName: 'Cộng Tác Viên FriendlyGuard', email: 'admin@admin.com' };
+            
             await db.collection('chats').doc(chatId).set({
                 name: chatName,
                 participants: [currentUser.uid, adminUserId],
@@ -1179,23 +952,23 @@
                 },
                 participantNames: {
                     [currentUser.uid]: currentUser.displayName || currentUser.email,
-                    [adminUserId]: 'Cộng Tác Viên FriendlyGuard'
+                    [adminUserId]: adminData.displayName || 'Cộng Tác Viên FriendlyGuard'
                 },
                 participantInfo: {
                     [currentUser.uid]: {
                         displayName: currentUser.displayName || currentUser.email,
                         email: currentUser.email,
-                        role: 'user'
+                        role: 'user',
+                        uid: currentUser.uid
                     },
                     [adminUserId]: {
-                        displayName: 'Cộng Tác Viên FriendlyGuard',
+                        displayName: adminData.displayName || 'Cộng Tác Viên FriendlyGuard',
                         email: 'admin@admin.com',
-                        role: 'admin'
+                        role: 'admin',
+                        uid: adminUserId
                     }
                 }
             });
-
-            // Add initial report message
             await db.collection('chats').doc(chatId).collection('messages').add({
                 text: `📋 BÁO CÁO SỰ VIỆC\n\nLoại vi phạm: ${reportData.violationType}\nMô tả: ${reportData.description}\nVị trí: ${reportData.location.lat.toFixed(6)}, ${reportData.location.lng.toFixed(6)}\nThời gian: ${new Date().toLocaleString('vi-VN')}\n\nHệ thống đã ghi nhận báo cáo của bạn. Cộng tác viên sẽ liên hệ hỗ trợ.`,
                 senderId: 'system',
@@ -1203,45 +976,33 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 isSystem: true
             });
-
-            // Add welcome message from admin
             await db.collection('chats').doc(chatId).collection('messages').add({
                 text: `Xin chào! Tôi là cộng tác viên FriendlyGuard. Tôi đã nhận được báo cáo của bạn về "${reportData.violationType}". Cảm ơn bạn đã dũng cảm báo cáo. Hãy cho tôi biết thêm chi tiết để chúng tôi có thể hỗ trợ bạn tốt nhất.`,
                 senderId: adminUserId,
-                senderName: 'Cộng Tác Viên FriendlyGuard',
+                senderName: adminData.displayName || 'Cộng Tác Viên FriendlyGuard',
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-
-            return {
-                chatId: chatId,
-                reportCode: reportCode
-            };
+            return { chatId: chatId, reportCode: reportCode };
         }
 
-        // Hiển thị popup thành công
         function showSuccessPopup(chatId, reportCode) {
             currentReportChatId = chatId;
             document.getElementById('reportCode').textContent = reportCode;
             document.getElementById('successPopup').style.display = 'flex';
-            
-            // Reset form
             resetForm();
         }
 
-        // Đóng popup
         document.getElementById('closePopup').addEventListener('click', function() {
             document.getElementById('successPopup').style.display = 'none';
             resetSubmitButton();
         });
 
-        // Đi đến chat
         document.getElementById('goToChat').addEventListener('click', function() {
             if (currentReportChatId) {
                 window.location.href = `chatbox.html?chatId=${currentReportChatId}`;
             }
         });
 
-        // Function to reset form
         function resetForm() {
             document.getElementById('reportForm').reset();
             document.getElementById('imagePreview').style.display = 'none';
@@ -1252,12 +1013,10 @@
                 map.removeLayer(selectedMarker);
                 selectedMarker = null;
             }
-            // Giữ thông báo vị trí hiển thị
             document.getElementById('locationConfirm').style.display = 'block';
             document.getElementById('selectedLocation').textContent = 'Chưa chọn vị trí (sẽ dùng vị trí hiện tại)';
         }
 
-        // Function to reset submit button
         function resetSubmitButton() {
             isSubmitting = false;
             const submitBtn = document.getElementById('submitBtn');
@@ -1265,7 +1024,6 @@
             submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Báo Cáo';
         }
 
-        // Close popup when clicking outside
         window.addEventListener('click', function(event) {
             const popup = document.getElementById('successPopup');
             if (event.target === popup) {
